@@ -12,7 +12,7 @@ public class RotateCube : MonoBehaviour
 	float dotValue;
 	bool clickedFirst;
 
-	Vector3 temp;
+	Quaternion to;
 	bool check;
 
 	private void Start()
@@ -24,7 +24,7 @@ public class RotateCube : MonoBehaviour
 
 	void Update()
 	{
-		// 마우스 stay
+		// 회전
 		if (Input.GetMouseButton(0))
 		{
 			check = false;
@@ -58,7 +58,7 @@ public class RotateCube : MonoBehaviour
 			prevPos = curPos;
 		}
 
-		// 마우스 up
+		// 각도 찾기
 		if (Input.GetMouseButtonUp(0))
 		{
 			clickedFirst = true;
@@ -66,40 +66,29 @@ public class RotateCube : MonoBehaviour
 			if (transform.eulerAngles.z >= 45 && transform.eulerAngles.z < 135)
 			{
 				check = true;
-
-				temp = new Vector3(7, 4, -1);
-
-				//temp = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 90);
-
-				//transform.rotation = Quaternion.Lerp(transform.rotation, a, Time.time * 2f);
-				//transform.rotation = Quaternion.Euler(transform.eulerAngles.x,
-				//transform.eulerAngles.y, 90);
+				to = Quaternion.AngleAxis(90, Vector3.forward);
 			}
 			else if (transform.eulerAngles.z >= 135 && transform.eulerAngles.z < 225)
 			{
-				transform.rotation = Quaternion.Euler(transform.eulerAngles.x,
-					transform.eulerAngles.y, 180);
+				check = true;
+				to = Quaternion.AngleAxis(180, Vector3.forward);
 			}
 			else if (transform.eulerAngles.z >= 225 && transform.eulerAngles.z < 315)
 			{
-				transform.rotation = Quaternion.Euler(transform.eulerAngles.x,
-					transform.eulerAngles.y, 270);
+				check = true;
+				to = Quaternion.AngleAxis(270, Vector3.forward);
 			}
 			else
 			{
-				transform.rotation = Quaternion.Euler(transform.eulerAngles.x,
-					transform.eulerAngles.y, 0);
+				check = true;
+				to = Quaternion.AngleAxis(0, Vector3.forward);
 			}
 		}
 
-
+		// 부드럽게 각도 이동
 		if (check)
 		{
-
-			Vector3 dir = temp - new Vector3(0, 4, -1);
-
-			Quaternion q = Quaternion.LookRotation(dir);
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, q, Time.deltaTime * 120f);
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);
 		}
 	}
 }
