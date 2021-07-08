@@ -1095,6 +1095,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CubeRoad3
       objectReference: {fileID: 0}
+    - target: {fileID: 538225045992465535, guid: 9d321a916a5e6a6438684649bfef350d, type: 3}
+      propertyPath: m_TagString
+      value: Illusion1Down
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d321a916a5e6a6438684649bfef350d, type: 3}
 --- !u!4 &446236091 stripped
@@ -1355,6 +1359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd8f9f618672fa48ac2cc2b245fc28d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlue: 0
 --- !u!1001 &493644572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2191,6 +2196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd8f9f618672fa48ac2cc2b245fc28d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlue: 0
 --- !u!1001 &846442322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2889,6 +2895,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b869bab05402284f9e4a00ddd6851f0, type: 3}
+--- !u!1 &1148999169 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2249493392004593672, guid: f1fd8d251511c09488c32377dc76a3b8, type: 3}
+  m_PrefabInstance: {fileID: 6962420878999690509}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1148999170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148999169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df5befa6d5526a4caf9fcf4e65d1c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeNum: 0
+  labelNum: 0
+  walkable: 0
+  child: []
+  childBlue: 
 --- !u!1 &1155958273
 GameObject:
   m_ObjectHideFlags: 0
@@ -4080,6 +4108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd8f9f618672fa48ac2cc2b245fc28d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlue: 0
 --- !u!1001 &1606428161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4751,6 +4780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd8f9f618672fa48ac2cc2b245fc28d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlue: 0
 --- !u!1 &1888123513
 GameObject:
   m_ObjectHideFlags: 0
@@ -4977,6 +5007,10 @@ PrefabInstance:
     - target: {fileID: 2249493392004593672, guid: f1fd8d251511c09488c32377dc76a3b8, type: 3}
       propertyPath: m_Name
       value: CubeSlope
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249493392004593672, guid: f1fd8d251511c09488c32377dc76a3b8, type: 3}
+      propertyPath: m_TagString
+      value: Illusion1Up
       objectReference: {fileID: 0}
     - target: {fileID: 3414082871245426576, guid: f1fd8d251511c09488c32377dc76a3b8, type: 3}
       propertyPath: m_IsActive

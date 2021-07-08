@@ -6,6 +6,9 @@ TagManager:
   tags:
   - ConnectionIndicator
   - ConnectWalkable
+  - CheckStair
+  - Illusion1Down
+  - Illusion1Up
   layers:
   - Default
   - TransparentFX
