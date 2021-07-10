@@ -11,23 +11,18 @@ using UnityEngine.UIElements;
 /* <길 연결> 2번 생각 */
 // [walkable]큐브(tag. ConnectWalkable)가 존재하는 모든 [부모]큐브 받아오기
 // 1번 큐브 부터 연결 그래프 확인하면서 인접 큐브 받아오기
-// 라벨링
+// bfs 라벨링
+
 
 /* <착시 연결> */
-// 이때 착시로 인해 나타나는 큐브는 강제로 연결시키기
-
-/* 플레이어 이동 */
-// 플레이어는 walkable 위치에서 local 좌표 기준 (y?) +0.5 만큼에 위치해 있기
-// 플레이어가 위치해 있는 큐브 묶음 [walkable]큐브 색상 변경
-// walkable 큐브 묶음은 가중치 없는 방향 그래프?로 존재
-// 갈찾기는 a*? 프로이드와샬?
+// 이때 착시에 필요한 큐브들은 강제로 연결시키기
 
 public class WalkablePath : MonoBehaviour
 {
     public int[,] cubeConnectionGraph;
 
-    private GameObject[] connectWalkable;
-    private CubeState[] cubeState;
+    public GameObject[] connectWalkable;    
+    public CubeState[] cubeState;          
     private int walkableCubeNum;
 
     private CubeState curCube;
@@ -36,10 +31,7 @@ public class WalkablePath : MonoBehaviour
     private int label;
     private int curCubeNum;
 
-    int illusion1, illusion2;
-
-    //private bool[] cubeBlue = new bool[4];
-    //private CubeState nextCube;
+    private int illusion1, illusion2;
 
     void Start()
     {
@@ -50,11 +42,11 @@ public class WalkablePath : MonoBehaviour
         // 큐브 번호 연결 그래프 만들 배열 생성 : 전체 0 초기화 되어있다 (0: 비연결 / 1: 연결)
         cubeConnectionGraph = new int[walkableCubeNum, walkableCubeNum];
 
-        // [부모]큐브의 CubeState 스크립트 가져오기
+        // CubeState 스크립트 가져오기
         cubeState = new CubeState[walkableCubeNum];
         for (int i = 0; i < walkableCubeNum; i++)
         {
-            cubeState[i] = connectWalkable[i].transform.parent.gameObject.GetComponent<CubeState>();
+            cubeState[i] = connectWalkable[i].GetComponent<CubeState>();
         }
 
         // 큐 생성
@@ -71,17 +63,17 @@ public class WalkablePath : MonoBehaviour
     {
         for (int i = 0; i < walkableCubeNum; i++)
         {
-            if (cubeState[i].gameObject.tag == "Illusion1Up")
+            if (connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Up")
                 illusion1 = cubeState[i].cubeNum;
-
-            if (cubeState[i].gameObject.tag == "Illusion1Down")
+            if (connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Down")
                 illusion2 = cubeState[i].cubeNum;
         }
+
         cubeConnectionGraph[illusion1, illusion2] = 1;
         cubeConnectionGraph[illusion2, illusion1] = 1;
     }
 
-        void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {

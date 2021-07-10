@@ -9,6 +9,7 @@ TagManager:
   - CheckStair
   - Illusion1Down
   - Illusion1Up
+  - StartCube
   layers:
   - Default
   - TransparentFX
