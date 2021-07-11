@@ -4,33 +4,48 @@ using UnityEngine;
 
 public class RotateCube : MonoBehaviour
 {
-	Vector3 handlePos;
-	Vector3 curPos;
-	Vector3 dir;
+	private Vector3 handlePos;
+	private Vector3 curPos;
+	private Vector3 dir;
 
-	Vector3 prevPos;
-	float dotValue;
-	bool clickedFirst;
+	private Vector3 prevPos;
+	private float dotValue;
+	private bool clickedFirst;
 
-	Quaternion to;
-	bool check;
+	private Quaternion to;
+	private bool check;
+
+	private WalkablePath walkablePath;
+	private bool checkOnce;
 
 	private void Start()
 	{
 		clickedFirst = true;
 		handlePos = Camera.main.WorldToScreenPoint(transform.position);
 		check = false;
+
+		checkOnce = true;
 	}
 
 	void Update()
 	{
-		// 회전
+		// 처음 한번만 실행
+		if (checkOnce)
+		{
+			// [walkable]큐브들 받아오기
+			walkablePath = GameObject.FindObjectOfType<WalkablePath>();
+			walkablePath.MakePath();
+			checkOnce = false;
+		}
+
+		// 회전 : 마우스 왼 클릭
 		if (Input.GetMouseButton(0))
 		{
 			check = false;
 			if (clickedFirst)
 			{
 				prevPos = Input.mousePosition;
+				walkablePath.MakePath();
 				clickedFirst = false;
 			}
 
@@ -89,6 +104,8 @@ public class RotateCube : MonoBehaviour
 		if (check)
 		{
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);
+			if(transform.rotation == to)
+				walkablePath.MakePath();
 		}
 	}
 }

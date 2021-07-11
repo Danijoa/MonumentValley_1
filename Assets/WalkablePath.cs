@@ -13,7 +13,6 @@ using UnityEngine.UIElements;
 // 1번 큐브 부터 연결 그래프 확인하면서 인접 큐브 받아오기
 // bfs 라벨링
 
-
 /* <착시 연결> */
 // 이때 착시에 필요한 큐브들은 강제로 연결시키기
 
@@ -73,19 +72,12 @@ public class WalkablePath : MonoBehaviour
         cubeConnectionGraph[illusion2, illusion1] = 1;
     }
 
-    void Update()
+    public void MakePath()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            for (int i = 0; i < walkableCubeNum; i++)
-                cubeState[i].labelNum = -1;
-            label = 1;
-            MakePath();
-        }
-    }
+        for (int i = 0; i < walkableCubeNum; i++)
+            cubeState[i].labelNum = -1;
+        label = 1;
 
-    void MakePath()
-    {
         for (int i = 0; i < walkableCubeNum; i++)
         {
             // 이미 확인된 큐브 

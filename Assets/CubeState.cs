@@ -8,7 +8,7 @@ public class CubeState : MonoBehaviour
 
     public int cubeNum;     // 큐브 고유 번호
     public int labelNum;    // 라벨링되어 있는 번호
-    //public bool walkable;   // 플레이어가 이동 가능한 큐브인가
+    public bool walkable;   // 플레이어가 이동 가능한 큐브인가
 
     Renderer colorChange;
 
@@ -21,7 +21,7 @@ public class CubeState : MonoBehaviour
     private void Start()
     {
         labelNum = -1;
-        //walkable = false;
+        walkable = false;
 
         colorChange = gameObject.GetComponent<Renderer>();
     }

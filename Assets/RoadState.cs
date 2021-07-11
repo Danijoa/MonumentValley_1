@@ -13,14 +13,4 @@ public class RoadState : MonoBehaviour
         roadNum = roadNumber++;
         //Debug.Log("roadNum : " + roadNum);
     }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        
-    }
 }
