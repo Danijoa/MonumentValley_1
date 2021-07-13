@@ -183,7 +183,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5734371351483829405}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -372,6 +372,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465528976454075790}
     m_Modifications:
+    - target: {fileID: 504903737198070555, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3968560209950508810, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
       propertyPath: m_Name
       value: CubeWalkable2Down
@@ -424,6 +428,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5559036161968695089, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836565979765218827, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856139727749407252, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7324062819301925826, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
 --- !u!4 &5204750496389066325 stripped
@@ -463,6 +483,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465528976454075790}
     m_Modifications:
+    - target: {fileID: 504903737198070555, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3968560209950508810, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
       propertyPath: m_Name
       value: CubeWalkable2Left
@@ -515,6 +539,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 5559036161968695089, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836565979765218827, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856139727749407252, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7324062819301925826, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
 --- !u!1 &6594803461098435162 stripped
@@ -554,6 +594,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465528976454075790}
     m_Modifications:
+    - target: {fileID: 504903737198070555, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3968560209950508810, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
       propertyPath: m_Name
       value: CubeWalkable2Right
@@ -606,6 +650,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 5559036161968695089, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836565979765218827, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856139727749407252, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7324062819301925826, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
 --- !u!1 &8570852658128429037 stripped
@@ -645,6 +705,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465528976454075790}
     m_Modifications:
+    - target: {fileID: 504903737198070555, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3968560209950508810, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
       propertyPath: m_Name
       value: CubeWalkable2Up
@@ -691,6 +755,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4647175463565265615, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5559036161968695089, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836565979765218827, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856139727749407252, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7324062819301925826, guid: 2e706dce8724f5748aa328c993790ac6, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

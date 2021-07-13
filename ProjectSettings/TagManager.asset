@@ -10,6 +10,8 @@ TagManager:
   - Illusion1Down
   - Illusion1Up
   - StartCube
+  - Handle
+  - FinalCube
   layers:
   - Default
   - TransparentFX

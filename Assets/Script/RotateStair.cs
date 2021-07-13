@@ -12,23 +12,28 @@ public class RotateStair : MonoBehaviour
     private float dotValue;
     private bool clickedFirst;
 
+    private RaycastHit rayHit = new RaycastHit();
+    private Ray ray;
+    private bool isHandle;
+
     private Quaternion to;
     private bool checkRotation;
 
-    private WalkablePath walkablePath;
     private bool checkOnce;
+    private WalkablePath walkablePath;
+    private int walkableCubeNum;
 
-    // Start is called before the first frame update
     void Start()
     {
         clickedFirst = true;
         handlePos = Camera.main.WorldToScreenPoint(transform.position);
         checkRotation = false;
 
+        isHandle = false;
+
         checkOnce = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         // 처음 한번만 실행
@@ -36,6 +41,7 @@ public class RotateStair : MonoBehaviour
         {
             // [walkable]큐브들 받아오기
             walkablePath = GameObject.FindObjectOfType<WalkablePath>();
+            walkableCubeNum = walkablePath.connectWalkable.Length;
             walkablePath.MakePath();
             checkOnce = false;
         }
@@ -51,33 +57,46 @@ public class RotateStair : MonoBehaviour
                 clickedFirst = false;
             }
 
-            // 핸들 위치의 화면상 좌표
-            handlePos = Camera.main.WorldToScreenPoint(transform.position);
-
-            // 현재 마우스 위치 - 이전 마우스 위치
-            curPos = Input.mousePosition;
-            dir = curPos - prevPos;
-
-            // 핸들 벡터 (내적) 회전 방향 벡터 -> 회전량
-            dotValue = Vector3.Dot(dir, Camera.main.transform.up);
-
-            // x 축 회전
-            if (curPos.x >= handlePos.x) // 1,2사분면  
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
             {
-                // transform.Rotate(회전 기준 축, 회전 속도, world 좌표 기준)
-                transform.Rotate(transform.right, dotValue, Space.World);
-            }
-            else // 3,4사분면 
-            {
-                transform.Rotate(transform.right, -dotValue, Space.World);
+                if (rayHit.transform.gameObject.tag == "Handle")
+                {
+                    isHandle = true;
+                }
             }
 
-            prevPos = curPos;
+            if (isHandle)
+            {
+                // 핸들 위치의 화면상 좌표
+                handlePos = Camera.main.WorldToScreenPoint(transform.position);
+
+                // 현재 마우스 위치 - 이전 마우스 위치
+                curPos = Input.mousePosition;
+                dir = curPos - prevPos;
+
+                // 핸들 벡터 (내적) 회전 방향 벡터 -> 회전량
+                dotValue = Vector3.Dot(dir, Camera.main.transform.up);
+
+                // x 축 회전
+                if (curPos.x >= handlePos.x) // 1,2사분면  
+                {
+                    // transform.Rotate(회전 기준 축, 회전 속도, world 좌표 기준)
+                    transform.Rotate(transform.right, dotValue, Space.World);
+                }
+                else // 3,4사분면 
+                {
+                    transform.Rotate(transform.right, -dotValue, Space.World);
+                }
+
+                prevPos = curPos;
+            }
         }
 
         // 각도 찾기
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && isHandle)
         {
+            isHandle = false;
             clickedFirst = true;
 
             if (transform.eulerAngles.x >= 0 && transform.eulerAngles.x < 180)

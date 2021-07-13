@@ -30,8 +30,6 @@ public class WalkablePath : MonoBehaviour
     private int label;
     private int curCubeNum;
 
-    private int illusion1, illusion2;
-
     void Start()
     {
         // [walkable]큐브(tag. ConnectWalkable)가 존재하는 큐브 받아오기
@@ -53,23 +51,6 @@ public class WalkablePath : MonoBehaviour
 
         // 시작 라벨
         label = 1;
-
-        // 착시 연결
-        ConnectIllusion();
-    }
-
-    void ConnectIllusion()
-    {
-        for (int i = 0; i < walkableCubeNum; i++)
-        {
-            if (connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Up")
-                illusion1 = cubeState[i].cubeNum;
-            if (connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Down")
-                illusion2 = cubeState[i].cubeNum;
-        }
-
-        cubeConnectionGraph[illusion1, illusion2] = 1;
-        cubeConnectionGraph[illusion2, illusion1] = 1;
     }
 
     public void MakePath()

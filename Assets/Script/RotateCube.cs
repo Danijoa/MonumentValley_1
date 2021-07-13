@@ -12,11 +12,18 @@ public class RotateCube : MonoBehaviour
 	private float dotValue;
 	private bool clickedFirst;
 
+	private RaycastHit rayHit = new RaycastHit();
+	private Ray ray;
+	private bool isHandle;
+
 	private Quaternion to;
 	private bool checkRotation;
 
-	private WalkablePath walkablePath;
 	private bool checkOnce;
+	private WalkablePath walkablePath;
+	private int walkableCubeNum;
+
+	private int illusion1Up, illusion1Down;
 
 	private void Start()
 	{
@@ -24,7 +31,23 @@ public class RotateCube : MonoBehaviour
 		handlePos = Camera.main.WorldToScreenPoint(transform.position);
 		checkRotation = false;
 
+		isHandle = false;
+
 		checkOnce = true;
+	}
+
+	void ConnectIllusion()
+	{
+		for (int i = 0; i < walkableCubeNum; i++)
+		{
+			if (walkablePath.connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Up")
+				illusion1Up = walkablePath.cubeState[i].cubeNum;
+			if (walkablePath.connectWalkable[i].GetComponentInParent<RoadState>().gameObject.tag == "Illusion1Down")
+				illusion1Down = walkablePath.cubeState[i].cubeNum;
+		}
+
+		walkablePath.cubeConnectionGraph[illusion1Up, illusion1Down] = 1;
+		walkablePath.cubeConnectionGraph[illusion1Down, illusion1Up] = 1;
 	}
 
 	void Update()
@@ -34,6 +57,11 @@ public class RotateCube : MonoBehaviour
 		{
 			// [walkable]큐브들 받아오기
 			walkablePath = GameObject.FindObjectOfType<WalkablePath>();
+			walkableCubeNum = walkablePath.connectWalkable.Length;
+
+			// 착시 연결
+			ConnectIllusion();
+
 			walkablePath.MakePath();
 			checkOnce = false;
 		}
@@ -49,33 +77,46 @@ public class RotateCube : MonoBehaviour
 				clickedFirst = false;
 			}
 
-			handlePos = Camera.main.WorldToScreenPoint(transform.position);
-			curPos = Input.mousePosition;
-			dir = curPos - prevPos;
-
-			//if (-Mathf.Epsilon < dir.y && dir.y < Mathf.Epsilon)
-			//	return;
-
-			// 내적값은 회전 방향..만...
-			dotValue = Vector3.Dot(dir, Camera.main.transform.up);
-
-			// z 축 회전
-			if (curPos.x >= handlePos.x) // 1,2사분면  
+			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
 			{
-				// transform.Rotate(회전 기준 축, 회전 속도, world 좌표 기준)
-				transform.Rotate(transform.forward, dotValue, Space.World);
-			}
-			else // 3,4사분면 
-			{
-				transform.Rotate(transform.forward, -dotValue, Space.World);
+				if (rayHit.transform.gameObject.tag == "Handle")
+				{
+					isHandle = true;
+				}
 			}
 
-			prevPos = curPos;
+			if (isHandle)
+			{
+				handlePos = Camera.main.WorldToScreenPoint(transform.position);
+				curPos = Input.mousePosition;
+				dir = curPos - prevPos;
+
+				//if (-Mathf.Epsilon < dir.y && dir.y < Mathf.Epsilon)
+				//	return;
+
+				// 내적값은 회전 방향..만...
+				dotValue = Vector3.Dot(dir, Camera.main.transform.up);
+
+				// z 축 회전
+				if (curPos.x >= handlePos.x) // 1,2사분면  
+				{
+					// transform.Rotate(회전 기준 축, 회전 속도, world 좌표 기준)
+					transform.Rotate(transform.forward, dotValue, Space.World);
+				}
+				else // 3,4사분면 
+				{
+					transform.Rotate(transform.forward, -dotValue, Space.World);
+				}
+
+				prevPos = curPos;
+			}
 		}
 
 		// 각도 찾기
-		if (Input.GetMouseButtonUp(0))
+		if (Input.GetMouseButtonUp(0) && isHandle)
 		{
+			isHandle = false;
 			clickedFirst = true;
 
 			if (transform.eulerAngles.z >= 45 && transform.eulerAngles.z < 135)
@@ -109,52 +150,3 @@ public class RotateCube : MonoBehaviour
 		}
 	}
 }
-
-	//Vector3 touchedPos;
-	//Vector3 prevPos = Vector3.zero;
-	//Vector3 standardPos;
-	//Vector3 dir;
-	//Vector3 prevDir = Vector3.zero;
-	//Vector3 up;
-	//float rotateAngle;
-	//float preAngle = 0.0f;
-
-	// void Update()
-	//{
-	//	// 마우스 터치
-	//	if (Input.GetMouseButton(0))
-	//	{			
-	//		// 3D 월드상 마우스 좌표
-	//		touchedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-	//		// 회전할 오브젝트 기준 위치
-	//		standardPos = transform.position;
-
-	//		// 오브젝트 기준 좌표에서 마우스 좌표까지 벡터
-	//		dir = (touchedPos - standardPos).normalized;
-	//		// 오브젝트 up 벡터
-	//		up = new Vector3(0, standardPos.y, 0);
-	//		// 두 벡터 사이의 각도 구하기 위해 정규화 후 내적 
-	//		rotateAngle = Vector3.Dot(dir, up.normalized);
-
-	//		// 회전 중일 때만
-	//		if (prevPos != touchedPos)	
-	//		{
-	//			// 시계 반대 방향으로 회전
-	//			//if()
-	//				transform.Rotate(transform.forward, rotateAngle * 4f, Space.World);
-	//			// 시계 방향으로 회전
-	//			//else
-	//				//transform.Rotate(transform.forward, -rotateAngle * 4f, Space.World);
-	//		}
-
-	//		// 이전 클릭 위치
-	//		prevPos = touchedPos;
-	//		preAngle = rotateAngle;
-	//		prevDir = dir;
-
-	//		Debug.Log("rotateAngle : " + rotateAngle);
-	//		Debug.Log("preAngle : " + preAngle);
-	//		Debug.Log("dir : " + dir);
-	//		Debug.Log("prevDir : " + prevDir);
-	//	}
-	//}
