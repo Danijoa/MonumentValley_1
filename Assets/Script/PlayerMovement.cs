@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     // 플레이어
     private Vector3 playerCubePos;
+    public int playerCubeNum;
     private int curPlayerCubeNum;
     private int curPlayerCubeLabel;
 
@@ -65,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
     private int index;
     private bool needMove;
     private bool needRotation;
+    private Vector3 nextCubePos;
 
     void Start()
     {
@@ -72,31 +74,34 @@ public class PlayerMovement : MonoBehaviour
         startCube = GameObject.FindGameObjectWithTag("StartCube").transform.GetChild(0).gameObject;
         // 플레이어는 [walkable]큐브 위치에서 local 좌표 기준 (y?) +0.8 만큼에 위치해 있기
         startCubePos = startCube.transform.position;
-        transform.position = new Vector3(startCubePos.x, startCubePos.y + 0.8f, startCubePos.z);
+        PlayerCubePos(startCubePos);
+        //transform.position = new Vector3(startCubePos.x, startCubePos.y + 0.8f, startCubePos.z);
 
         checkOnce = true;
     }
 
     void Update()
     {
+        // 처음 한번만 실행
+        if (checkOnce)
+        {
+            // [walkable]큐브들 받아오기
+            walkablePath = GameObject.FindObjectOfType<WalkablePath>();
+            connectWalkable = walkablePath.connectWalkable;
+            cubeConnectionGraph = walkablePath.cubeConnectionGraph;
+
+            // 초기화
+            visitedCube = new bool[connectWalkable.Length];
+            pathCubeNum = new int[connectWalkable.Length];
+
+            PlayerCubeNum();
+
+            checkOnce = false;
+        }
+
         // 큐브 선택: 마우스 오른 클릭
         if (Input.GetMouseButtonDown(1))
         {
-            // 처음 한번만 실행
-            if (checkOnce)
-            {
-                // [walkable]큐브들 받아오기
-                walkablePath = GameObject.FindObjectOfType<WalkablePath>();
-                connectWalkable = walkablePath.connectWalkable;
-                cubeConnectionGraph = walkablePath.cubeConnectionGraph;
-
-                // 초기화
-                visitedCube = new bool[connectWalkable.Length];
-                pathCubeNum = new int[connectWalkable.Length];
-
-                checkOnce = false;
-            }
-
             // 클릭한 오브젝트
             for (int i = 0; i < connectWalkable.Length; i++)
             {
@@ -217,12 +222,13 @@ public class PlayerMovement : MonoBehaviour
         // 이동하자
         if (needMove && !needRotation)
         {
-            Vector3 nextCubePos = pathCube[index].transform.position;
+            nextCubePos = pathCube[index].transform.position;
             targetPos = new Vector3(nextCubePos.x, nextCubePos.y + 0.8f, nextCubePos.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 8f);
 
             if (transform.position == targetPos)
             {
+                PlayerCubeNum();
                 index++;
                 needRotation = true;
             }
@@ -236,15 +242,33 @@ public class PlayerMovement : MonoBehaviour
 
         if (needRotation)
         {
-            //Vector3 dir = pathCube[index].transform.position - new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z); ;
-            Vector3 dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z) 
-                - new Vector3(transform.position.x, 0, transform.position.z); ;
+            Vector3 dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z)
+                - new Vector3(transform.position.x, 0, transform.position.z);
             targetDir = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetDir, Time.deltaTime * 200f);
-            if (transform.rotation == targetDir) 
+            if (transform.rotation == targetDir)
             {
                 needRotation = false;
             }
         }
-	}
+    }
+
+    private void PlayerCubeNum()
+    {
+        for (int i = 0; i < connectWalkable.Length; i++)
+        {
+            Vector3 tempPos = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
+            if (tempPos == connectWalkable[i].transform.position)
+            {
+                playerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
+                Debug.Log("번호: " + playerCubeNum);
+                break;
+            }
+        }
+    }
+
+    public void PlayerCubePos(Vector3 playerCube)
+    {
+        transform.position = new Vector3(playerCube.x, playerCube.y + 0.8f, playerCube.z);
+    }
 }
