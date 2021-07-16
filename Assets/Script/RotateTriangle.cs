@@ -26,14 +26,6 @@ public class RotateTriangle : MonoBehaviour
             checkOnce = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            checkRotation = true;
-
-            // z축으로 90
-            to = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.up);
-        }
-
         // 부드럽게 각도 
         if (checkRotation)
         {
@@ -44,5 +36,13 @@ public class RotateTriangle : MonoBehaviour
                 walkablePath.MakePath();
             }
         }
+    }
+
+    public void DoRotation()
+    {
+        checkRotation = true;
+
+        // z축으로 90
+        to = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.up);
     }
 }

@@ -103,49 +103,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             // 클릭한 오브젝트
-            for (int i = 0; i < connectWalkable.Length; i++)
-            {
-                RaycastHit rayHit = new RaycastHit();
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
-                {
-                    // 클릭한 오브젝트가 [walkable]큐브 이면
-                    if (rayHit.transform.gameObject.tag == "ConnectWalkable")
-                    {
-                        // [walkable]큐브면 해당 큐브 번호, 라벨 찾기
-                        curWalkableCubeNum = rayHit.transform.gameObject.GetComponent<CubeState>().cubeNum;
-                        curWalkableCubeLabel = rayHit.transform.gameObject.GetComponent<CubeState>().labelNum;
-                        //Debug.Log("큐브 번호" + curWalkableCubeNum);
-                        //Debug.Log("큐브 라벨" + curWalkableCubeLabel);
-
-                        rayHit.transform.gameObject.GetComponent<Renderer>().material.color
-                            = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //주황
-
-                        break;
-                    }
-                }
-            }
+            FindClickedOdject();
 
             // 플레이어
-            for (int i = 0; i < connectWalkable.Length; i++)
-            {
-                // 현재 플레이어 위치와 [walkable]큐브 위치가 동일하면
-                playerCubePos = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
-                if (playerCubePos == connectWalkable[i].transform.position)
-                {
-                    // 해당 [walkable]큐브의 번호, 라벨 알기
-                    curPlayerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
-                    curPlayerCubeLabel = connectWalkable[i].GetComponent<CubeState>().labelNum;
-                    //Debug.Log("플레이어 번호 : " + curPlayerCubeNum);
-                    //Debug.Log("플레이어 라벨 : " + curPlayerCubeLabel);
-
-                    connectWalkable[i].transform.GetComponent<Renderer>().material.color
-                        = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //주황
-
-                    break;
-                }
-            }
+            FindPlayer();
 
             // 플레이어와 클릭한 큐브가 동일한 라벨이면
             if (curWalkableCubeLabel == curPlayerCubeLabel)
@@ -160,57 +121,10 @@ public class PlayerMovement : MonoBehaviour
 
                 // 현재 큐브 번호에서 클릭한 큐브 번호로 가는 길
                 // 큐브 번호 BFS로 길찾기
-                pathFind.Enqueue(curPlayerCubeNum);
-                visitedCube[curPlayerCubeNum] = true;
-                pathCubeNum[curPlayerCubeNum] = curPlayerCubeNum;
-
-                while (pathFind.Count != 0)
-                {
-                    int curNum = pathFind.Dequeue();
-
-                    for (int j = 0; j < connectWalkable.Length; j++)
-                    {
-                        // 인접하면서 방문전인 큐브
-                        if (cubeConnectionGraph[curNum, j] == 1 && visitedCube[j] == false)
-                        {
-                            // 큐에 넣기
-                            pathFind.Enqueue(j);
-                            // 방문 갱신
-                            visitedCube[j] = true;
-                            // 부모 갱신
-                            pathCubeNum[j] = curNum;
-                        }
-                    }
-
-                    // 타겟 큐브를 방문 했으면 break
-                    if (visitedCube[curWalkableCubeNum] == true)
-                        break;
-                }
+                PathBFS();
 
                 // 길 저장
-                pathStore.Clear();
-                pathStore.Add(curWalkableCubeNum);
-                int temp = curWalkableCubeNum;
-                while (temp != curPlayerCubeNum)
-                {
-                    pathStore.Add(pathCubeNum[temp]);
-                    temp = pathCubeNum[temp];
-                }
-
-                // 뒤에서 부터 앞으로 읽기
-                pathCube.Clear();
-                for (int i = pathStore.Count - 1; i >= 0; i--)
-                {
-                    // 찾은 큐브 번호에 해당하는 GameObject 찾아서 저장하기
-                    for (int j = 0; j < connectWalkable.Length; j++)
-                    {
-                        if (pathStore[i] == connectWalkable[j].GetComponent<CubeState>().cubeNum)
-                        {
-                            pathCube.Add(connectWalkable[j]);
-                            break;
-                        }
-                    }
-                }
+                StorePath();
 
                 // 클릭한 위치 경로 구했으면 이동 준비 끝
                 index = 0;
@@ -240,6 +154,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        // 회전하자
         if (needRotation)
         {
             Vector3 dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z)
@@ -253,6 +168,114 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void FindClickedOdject()
+    {
+        for (int i = 0; i < connectWalkable.Length; i++)
+        {
+            RaycastHit rayHit = new RaycastHit();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
+            {
+                // 클릭한 오브젝트가 [walkable]큐브 이면
+                if (rayHit.transform.gameObject.tag == "ConnectWalkable")
+                {
+                    // [walkable]큐브면 해당 큐브 번호, 라벨 찾기
+                    curWalkableCubeNum = rayHit.transform.gameObject.GetComponent<CubeState>().cubeNum;
+                    curWalkableCubeLabel = rayHit.transform.gameObject.GetComponent<CubeState>().labelNum;
+                    //Debug.Log("큐브 번호" + curWalkableCubeNum);
+                    //Debug.Log("큐브 라벨" + curWalkableCubeLabel);
+
+                    rayHit.transform.gameObject.GetComponent<Renderer>().material.color
+                        = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //주황
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private void FindPlayer()
+    {
+        for (int i = 0; i < connectWalkable.Length; i++)
+        {
+            // 현재 플레이어 위치와 [walkable]큐브 위치가 동일하면
+            playerCubePos = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
+            Vector3 temp = playerCubePos - connectWalkable[i].transform.position;
+
+            if (temp.magnitude < 0.1f)
+            {
+                // 해당 [walkable]큐브의 번호, 라벨 알기
+                curPlayerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
+                curPlayerCubeLabel = connectWalkable[i].GetComponent<CubeState>().labelNum;
+                //Debug.Log("플레이어 번호 : " + curPlayerCubeNum);
+                //Debug.Log("플레이어 라벨 : " + curPlayerCubeLabel);
+
+                connectWalkable[i].transform.GetComponent<Renderer>().material.color
+                    = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //주황
+
+                break;
+            }
+        }
+    }
+
+    private void PathBFS()
+    {
+        pathFind.Enqueue(curPlayerCubeNum);
+        visitedCube[curPlayerCubeNum] = true;
+        pathCubeNum[curPlayerCubeNum] = curPlayerCubeNum;
+
+        while (pathFind.Count != 0)
+        {
+            int curNum = pathFind.Dequeue();
+
+            for (int j = 0; j < connectWalkable.Length; j++)
+            {
+                // 인접하면서 방문전인 큐브
+                if (cubeConnectionGraph[curNum, j] == 1 && visitedCube[j] == false)
+                {
+                    // 큐에 넣기
+                    pathFind.Enqueue(j);
+                    // 방문 갱신
+                    visitedCube[j] = true;
+                    // 부모 갱신
+                    pathCubeNum[j] = curNum;
+                }
+            }
+
+            // 타겟 큐브를 방문 했으면 break
+            if (visitedCube[curWalkableCubeNum] == true)
+                break;
+        }
+    }
+
+    private void StorePath()
+    {
+        pathStore.Clear();
+        pathStore.Add(curWalkableCubeNum);
+        int temp = curWalkableCubeNum;
+        while (temp != curPlayerCubeNum)
+        {
+            pathStore.Add(pathCubeNum[temp]);
+            temp = pathCubeNum[temp];
+        }
+
+        // 뒤에서 부터 앞으로 읽기
+        pathCube.Clear();
+        for (int i = pathStore.Count - 1; i >= 0; i--)
+        {
+            // 찾은 큐브 번호에 해당하는 GameObject 찾아서 저장하기
+            for (int j = 0; j < connectWalkable.Length; j++)
+            {
+                if (pathStore[i] == connectWalkable[j].GetComponent<CubeState>().cubeNum)
+                {
+                    pathCube.Add(connectWalkable[j]);
+                    break;
+                }
+            }
+        }
+    }
+
     private void PlayerCubeNum()
     {
         for (int i = 0; i < connectWalkable.Length; i++)
@@ -261,7 +284,7 @@ public class PlayerMovement : MonoBehaviour
             if (tempPos == connectWalkable[i].transform.position)
             {
                 playerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
-                Debug.Log("번호: " + playerCubeNum);
+                //Debug.Log("번호: " + playerCubeNum);
                 break;
             }
         }
