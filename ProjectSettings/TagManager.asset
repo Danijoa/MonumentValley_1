@@ -10,8 +10,10 @@ TagManager:
   - Illusion1Up
   - StartCube
   - Handle
-  - FinalCube
   - FloorHandle
+  - NextButton
+  - FadeUI
+  - DataObject
   layers:
   - Default
   - TransparentFX

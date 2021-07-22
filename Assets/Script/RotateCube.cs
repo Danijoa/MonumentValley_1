@@ -70,18 +70,18 @@ public class RotateCube : MonoBehaviour
 		if (Input.GetMouseButton(0))
 		{
 			checkRotation = false;
-			if (clickedFirst)
-			{
-				prevPos = Input.mousePosition;
-				walkablePath.MakePath();
-				clickedFirst = false;
-			}
 
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
 			{
 				if (rayHit.transform.gameObject.tag == "Handle")
 				{
+					if (clickedFirst)
+					{
+						prevPos = Input.mousePosition;
+						clickedFirst = false;
+					}
+
 					isHandle = true;
 				}
 			}

@@ -4,27 +4,33 @@ using UnityEngine;
 
 public class RotateFloor : MonoBehaviour
 {
+    // íšŒì „
+    private bool clickedFirst;
+    
     private Vector3 floorHandlePos;
     private Vector3 curPos;
     private Vector3 dir;
 
     private Vector3 prevPos;
     private float dotValue;
-    private bool clickedFirst;
-
-    private RaycastHit rayHit = new RaycastHit();
-    private Ray ray;
-    private bool isFloorHandle;
-    private bool checkPlayer;
 
     private Quaternion to;
     private bool checkRotation;
 
+    // ì„ íƒí•œ ë¬¼ì²´
+    private RaycastHit rayHit = new RaycastHit();
+    private Ray ray;
+    private bool isFloorHandle;
+    private bool checkPlayer;   // í”Œë ˆì´ì–´ë„ íšŒì „
+
+    // ê¸¸ ì—°ê²°
     private bool checkOnce;
     private WalkablePath walkablePath;
 
+    // í”Œë ˆì´ì–´
     private PlayerMovement playerMovement;
 
+    // ì°©ì‹œ
     private int illusion1Up, illusion1Down;
 
     void Start()
@@ -52,32 +58,34 @@ public class RotateFloor : MonoBehaviour
 
     void Update()
     {
-        // Ã³À½ ÇÑ¹ø¸¸ ½ÇÇà
+        // ì²˜ìŒ í•œë²ˆë§Œ ì‹¤í–‰
         if (checkOnce)
         {
-            // [walkable]Å¥ºêµé ¹Ş¾Æ¿À±â
+            // [walkable]íë¸Œë“¤ ë°›ì•„ì˜¤ê¸°
             walkablePath = GameObject.FindObjectOfType<WalkablePath>();
             playerMovement = GameObject.FindObjectOfType<PlayerMovement>();
             ConnectIllusion();
             checkOnce = false;
         }
 
-        // È¸Àü : ¸¶¿ì½º ¿Ş Å¬¸¯
-        if (Input.GetMouseButton(0))
+        // íšŒì „ : ë§ˆìš°ìŠ¤ ì™¼ í´ë¦­
+        if (Input.GetMouseButton(0) && GameManagerStage2.instance.isStairRotating == false)
         {
             checkRotation = false;
-            if (clickedFirst)
-            {
-                prevPos = Input.mousePosition;
-                // walkablePath.MakePath();
-                clickedFirst = false;
-            }
 
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
             {
                 if (rayHit.transform.gameObject.tag == "FloorHandle")
                 {
+                    GameManagerStage2.instance.isFloorRotating = true;
+
+                    if (clickedFirst)
+                    {
+                        prevPos = Input.mousePosition;
+                        clickedFirst = false;
+                    }
+
                     isFloorHandle = true;
                     checkPlayer = true;
                 }
@@ -85,23 +93,23 @@ public class RotateFloor : MonoBehaviour
 
             if (isFloorHandle)
             {
-                // ÇÚµé À§Ä¡ÀÇ È­¸é»ó ÁÂÇ¥
+                // í•¸ë“¤ ìœ„ì¹˜ì˜ í™”ë©´ìƒ ì¢Œí‘œ
                 floorHandlePos = Camera.main.WorldToScreenPoint(transform.position);
 
-                // ÇöÀç ¸¶¿ì½º À§Ä¡ - ÀÌÀü ¸¶¿ì½º À§Ä¡
+                // í˜„ì¬ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ - ì´ì „ ë§ˆìš°ìŠ¤ ìœ„ì¹˜
                 curPos = Input.mousePosition;
                 dir = curPos - prevPos;
 
-                // ÇÚµé º¤ÅÍ (³»Àû) È¸Àü ¹æÇâ º¤ÅÍ -> È¸Àü·®
+                // í•¸ë“¤ ë²¡í„° (ë‚´ì ) íšŒì „ ë°©í–¥ ë²¡í„° -> íšŒì „ëŸ‰
                 dotValue = Vector3.Dot(dir, Camera.main.transform.up);
 
-                // x Ãà È¸Àü
-                if (curPos.x >= floorHandlePos.x) // 1,2»çºĞ¸é  
+                // x ì¶• íšŒì „
+                if (curPos.x >= floorHandlePos.x) // 1,2ì‚¬ë¶„ë©´  
                 {
-                    // transform.Rotate(È¸Àü ±âÁØ Ãà, È¸Àü ¼Óµµ, world ÁÂÇ¥ ±âÁØ)
+                    // transform.Rotate(íšŒì „ ê¸°ì¤€ ì¶•, íšŒì „ ì†ë„, world ì¢Œí‘œ ê¸°ì¤€)
                     transform.Rotate(transform.up, -dotValue, Space.World);
                 }
-                else // 3,4»çºĞ¸é 
+                else // 3,4ì‚¬ë¶„ë©´ 
                 {
                     transform.Rotate(transform.up, dotValue, Space.World);
                 }
@@ -110,9 +118,10 @@ public class RotateFloor : MonoBehaviour
             }
         }
 
-        // °¢µµ Ã£±â
+        // ê°ë„ ì°¾ê¸°
         if (Input.GetMouseButtonUp(0) && isFloorHandle)
         {
+            GameManagerStage2.instance.isFloorRotating = false;
             isFloorHandle = false;
             clickedFirst = true;
 
@@ -150,7 +159,7 @@ public class RotateFloor : MonoBehaviour
             }
         }
 
-        // ºÎµå·´°Ô °¢µµ ÀÌµ¿
+        // ë¶€ë“œëŸ½ê²Œ ê°ë„ ì´ë™
         if (checkRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);
@@ -161,14 +170,14 @@ public class RotateFloor : MonoBehaviour
             }
         }
 
-        // ÇÃ·¹ÀÌ¾îµµ °°ÀÌ È¸Àü ½ÃÄÑ ÁÖÀÚ
+        // í”Œë ˆì´ì–´ë„ ê°™ì´ íšŒì „ ì‹œì¼œ ì£¼ì
         if (checkPlayer)
             MakePlayerMove();
     }
 
     private void MakePlayerMove()
     {
-        // ÇÃ·¹ÀÌ¾î°¡ À§Ä¡ÇØ ÀÖ´Â walkable cube number¿Í °°Àº Å¥ºêÀÇ À§Ä¡º¤ÅÍ Àü´Ş
+        // í”Œë ˆì´ì–´ê°€ ìœ„ì¹˜í•´ ìˆëŠ” walkable cube numberì™€ ê°™ì€ íë¸Œì˜ ìœ„ì¹˜ë²¡í„° ì „ë‹¬
         for (int i = 0; i < walkablePath.connectWalkable.Length; i++)
         {
             if (playerMovement.playerCubeNum == walkablePath.cubeState[i].cubeNum)

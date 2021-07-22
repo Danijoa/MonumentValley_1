@@ -18,15 +18,15 @@ public class RotateTriangle : MonoBehaviour
 
     void Update()
     {
-        // Ã³À½ ÇÑ¹ø¸¸ ½ÇÇà
+        // ì²˜ìŒ í•œë²ˆë§Œ ì‹¤í–‰
         if (checkOnce)
         {
-            // [walkable]Å¥ºêµé ¹Ş¾Æ¿À±â
+            // [walkable]íë¸Œë“¤ ë°›ì•„ì˜¤ê¸°
             walkablePath = GameObject.FindObjectOfType<WalkablePath>();
             checkOnce = false;
         }
 
-        // ºÎµå·´°Ô °¢µµ 
+        // ë¶€ë“œëŸ½ê²Œ ê°ë„ 
         if (checkRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);
@@ -42,7 +42,8 @@ public class RotateTriangle : MonoBehaviour
     {
         checkRotation = true;
 
-        // zÃàÀ¸·Î 90
-        to = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.up);
+        // zì¶•ìœ¼ë¡œ 90
+        to = transform.rotation * Quaternion.AngleAxis(90, Vector3.forward);
+        //to = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.up);
     }
 }

@@ -6,9 +6,9 @@ public class CubeState : MonoBehaviour
 {
     public static int cubeNumber = 0;
 
-    public int cubeNum;     // Å¥ºê °íÀ¯ ¹øÈ£
-    public int labelNum;    // ¶óº§¸µµÇ¾î ÀÖ´Â ¹øÈ£
-    public bool walkable;   // ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ °¡´ÉÇÑ Å¥ºêÀÎ°¡
+    public int cubeNum;     // íë¸Œ ê³ ìœ  ë²ˆí˜¸
+    public int labelNum;    // ë¼ë²¨ë§ë˜ì–´ ìˆëŠ” ë²ˆí˜¸
+    public bool walkable;   // í”Œë ˆì´ì–´ê°€ ì´ë™ ê°€ëŠ¥í•œ íë¸Œì¸ê°€
 
     Renderer colorChange;
 
@@ -28,20 +28,20 @@ public class CubeState : MonoBehaviour
 
     private void Update()
     {
-        // »ö»ó ±¸ºĞ
-        if (labelNum == 1)
-            colorChange.material.color = new Color(0 / 255f, 255 / 255f, 255 / 255f);   //ÇÏ´Ã
-        else if (labelNum == 2)
-            colorChange.material.color = new Color(255 / 255f, 0 / 255f, 255 / 255f);   //º¸¶ó
-        else if (labelNum == 3)
-            colorChange.material.color = new Color(255 / 255f, 0 / 255f, 0 / 255f);     //»¡°£
-        else if (labelNum == 4)
-            colorChange.material.color = new Color(0 / 255f, 0 / 255f, 255 / 255f);     //ÆÄ¶û
-        else if (labelNum == 5)
-            colorChange.material.color = new Color(0 / 255f, 255 / 255f, 0 / 255f);     //ÃÊ·Ï
-        else if (labelNum == 6)
-            colorChange.material.color = new Color(0 / 255f, 0 / 255f, 0 / 255f);       //°ËÁ¤
-        else
-            colorChange.material.color = new Color(255 / 255f, 255 / 255f, 0 / 255f);   //³ë¶û
+        //// ìƒ‰ìƒ êµ¬ë¶„
+        //if (labelNum == 1)
+        //    colorChange.material.color = new Color(0 / 255f, 255 / 255f, 255 / 255f);   //í•˜ëŠ˜
+        //else if (labelNum == 2)
+        //    colorChange.material.color = new Color(255 / 255f, 0 / 255f, 255 / 255f);   //ë³´ë¼
+        //else if (labelNum == 3)
+        //    colorChange.material.color = new Color(255 / 255f, 0 / 255f, 0 / 255f);     //ë¹¨ê°„
+        //else if (labelNum == 4)
+        //    colorChange.material.color = new Color(0 / 255f, 0 / 255f, 255 / 255f);     //íŒŒë‘
+        //else if (labelNum == 5)
+        //    colorChange.material.color = new Color(0 / 255f, 255 / 255f, 0 / 255f);     //ì´ˆë¡
+        //else if (labelNum == 6)
+        //    colorChange.material.color = new Color(0 / 255f, 0 / 255f, 0 / 255f);       //ê²€ì •
+        //else
+        //    colorChange.material.color = new Color(255 / 255f, 255 / 255f, 0 / 255f);   //ë…¸ë‘
     }
 }

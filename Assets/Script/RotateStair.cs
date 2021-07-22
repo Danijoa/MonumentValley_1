@@ -36,55 +36,57 @@ public class RotateStair : MonoBehaviour
 
     void Update()
     {
-        // Ã³À½ ÇÑ¹ø¸¸ ½ÇÇà
+        // ì²˜ìŒ í•œë²ˆë§Œ ì‹¤í–‰
         if (checkOnce)
         {
-            // [walkable]Å¥ºêµé ¹Ş¾Æ¿À±â
+            // [walkable]íë¸Œë“¤ ë°›ì•„ì˜¤ê¸°
             walkablePath = GameObject.FindObjectOfType<WalkablePath>();
             walkableCubeNum = walkablePath.connectWalkable.Length;
             walkablePath.MakePath();
             checkOnce = false;
         }
 
-        // È¸Àü : ¸¶¿ì½º ¿Ş Å¬¸¯
-        if (Input.GetMouseButton(0))
+        // íšŒì „ : ë§ˆìš°ìŠ¤ ì™¼ í´ë¦­
+        if (Input.GetMouseButton(0) && GameManagerStage2.instance.isFloorRotating == false)
         {
             checkRotation = false;
-            if (clickedFirst)
-            {
-                prevPos = Input.mousePosition;
-                walkablePath.MakePath();
-                clickedFirst = false;
-            }
 
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
             {
                 if (rayHit.transform.gameObject.tag == "Handle")
                 {
+                    GameManagerStage2.instance.isStairRotating = true;
+
+                    if (clickedFirst)
+                    {
+                        prevPos = Input.mousePosition;
+                        clickedFirst = false;
+                    }
+
                     isHandle = true;
                 }
             }
 
             if (isHandle)
             {
-                // ÇÚµé À§Ä¡ÀÇ È­¸é»ó ÁÂÇ¥
+                // í•¸ë“¤ ìœ„ì¹˜ì˜ í™”ë©´ìƒ ì¢Œí‘œ
                 handlePos = Camera.main.WorldToScreenPoint(transform.position);
 
-                // ÇöÀç ¸¶¿ì½º À§Ä¡ - ÀÌÀü ¸¶¿ì½º À§Ä¡
+                // í˜„ì¬ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ - ì´ì „ ë§ˆìš°ìŠ¤ ìœ„ì¹˜
                 curPos = Input.mousePosition;
                 dir = curPos - prevPos;
 
-                // ÇÚµé º¤ÅÍ (³»Àû) È¸Àü ¹æÇâ º¤ÅÍ -> È¸Àü·®
+                // í•¸ë“¤ ë²¡í„° (ë‚´ì ) íšŒì „ ë°©í–¥ ë²¡í„° -> íšŒì „ëŸ‰
                 dotValue = Vector3.Dot(dir, Camera.main.transform.up);
 
-                // x Ãà È¸Àü
-                if (curPos.x >= handlePos.x) // 1,2»çºĞ¸é  
+                // x ì¶• íšŒì „
+                if (curPos.x >= handlePos.x) // 1,2ì‚¬ë¶„ë©´  
                 {
-                    // transform.Rotate(È¸Àü ±âÁØ Ãà, È¸Àü ¼Óµµ, world ÁÂÇ¥ ±âÁØ)
+                    // transform.Rotate(íšŒì „ ê¸°ì¤€ ì¶•, íšŒì „ ì†ë„, world ì¢Œí‘œ ê¸°ì¤€)
                     transform.Rotate(transform.right, dotValue, Space.World);
                 }
-                else // 3,4»çºĞ¸é 
+                else // 3,4ì‚¬ë¶„ë©´ 
                 {
                     transform.Rotate(transform.right, -dotValue, Space.World);
                 }
@@ -93,9 +95,10 @@ public class RotateStair : MonoBehaviour
             }
         }
 
-        // °¢µµ Ã£±â
+        // ê°ë„ ì°¾ê¸°
         if (Input.GetMouseButtonUp(0) && isHandle)
         {
+            GameManagerStage2.instance.isStairRotating = false;
             isHandle = false;
             clickedFirst = true;
 
@@ -111,7 +114,7 @@ public class RotateStair : MonoBehaviour
             }
         }
 
-        // ºÎµå·´°Ô °¢µµ ÀÌµ¿
+        // ë¶€ë“œëŸ½ê²Œ ê°ë„ ì´ë™
         if (checkRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-/* <±æ ¿¬°á> 1¹ø »ı°¢ */
-// [walkable]Å¥ºê(tag. ConnectWalkable)°¡ Á¸ÀçÇÏ´Â ¸ğµç [ºÎ¸ğ]Å¥ºê ¹Ş¾Æ¿À±â
-// [ºÎ¸ğ]Å¥ºê¸¦ ÇÏ³ªÇÏ³ª È®ÀÎÇÏ¸é¼­ ¾Æ·¡ ÀÖ´Â [up down left right]Å¥ºê ÆÄ¶õºÒ µé¾î¿ÍÀÖ´ÂÁö È®ÀÎ
-// ÆÄ¶õºÒ ÀÖ´Â Å¥ºê³¢¸® ¹­±â -> ¶óº§¸µ Ã³·³..
+/* <ê¸¸ ì—°ê²°> 1ë²ˆ ìƒê° */
+// [walkable]íë¸Œ(tag. ConnectWalkable)ê°€ ì¡´ì¬í•˜ëŠ” ëª¨ë“  [ë¶€ëª¨]íë¸Œ ë°›ì•„ì˜¤ê¸°
+// [ë¶€ëª¨]íë¸Œë¥¼ í•˜ë‚˜í•˜ë‚˜ í™•ì¸í•˜ë©´ì„œ ì•„ë˜ ìˆëŠ” [up down left right]íë¸Œ íŒŒë€ë¶ˆ ë“¤ì–´ì™€ìˆëŠ”ì§€ í™•ì¸
+// íŒŒë€ë¶ˆ ìˆëŠ” íë¸Œë¼ë¦¬ ë¬¶ê¸° -> ë¼ë²¨ë§ ì²˜ëŸ¼..
 
-/* <±æ ¿¬°á> 2¹ø »ı°¢ */
-// [walkable]Å¥ºê(tag. ConnectWalkable)°¡ Á¸ÀçÇÏ´Â ¸ğµç [ºÎ¸ğ]Å¥ºê ¹Ş¾Æ¿À±â
-// 1¹ø Å¥ºê ºÎÅÍ ¿¬°á ±×·¡ÇÁ È®ÀÎÇÏ¸é¼­ ÀÎÁ¢ Å¥ºê ¹Ş¾Æ¿À±â
-// bfs ¶óº§¸µ
+/* <ê¸¸ ì—°ê²°> 2ë²ˆ ìƒê° */
+// [walkable]íë¸Œ(tag. ConnectWalkable)ê°€ ì¡´ì¬í•˜ëŠ” ëª¨ë“  [ë¶€ëª¨]íë¸Œ ë°›ì•„ì˜¤ê¸°
+// 1ë²ˆ íë¸Œ ë¶€í„° ì—°ê²° ê·¸ë˜í”„ í™•ì¸í•˜ë©´ì„œ ì¸ì ‘ íë¸Œ ë°›ì•„ì˜¤ê¸°
+// bfs ë¼ë²¨ë§
 
-/* <Âø½Ã ¿¬°á> */
-// ÀÌ¶§ Âø½Ã¿¡ ÇÊ¿äÇÑ Å¥ºêµéÀº °­Á¦·Î ¿¬°á½ÃÅ°±â
+/* <ì°©ì‹œ ì—°ê²°> */
+// ì´ë•Œ ì°©ì‹œì— í•„ìš”í•œ íë¸Œë“¤ì€ ê°•ì œë¡œ ì—°ê²°ì‹œí‚¤ê¸°
 
 public class WalkablePath : MonoBehaviour
 {
@@ -32,24 +32,24 @@ public class WalkablePath : MonoBehaviour
 
     void Start()
     {
-        // [walkable]Å¥ºê(tag. ConnectWalkable)°¡ Á¸ÀçÇÏ´Â Å¥ºê ¹Ş¾Æ¿À±â
+        // [walkable]íë¸Œ(tag. ConnectWalkable)ê°€ ì¡´ì¬í•˜ëŠ” íë¸Œ ë°›ì•„ì˜¤ê¸°
         connectWalkable = GameObject.FindGameObjectsWithTag("ConnectWalkable");
         walkableCubeNum = connectWalkable.Length;
 
-        // Å¥ºê ¹øÈ£ ¿¬°á ±×·¡ÇÁ ¸¸µé ¹è¿­ »ı¼º : ÀüÃ¼ 0 ÃÊ±âÈ­ µÇ¾îÀÖ´Ù (0: ºñ¿¬°á / 1: ¿¬°á)
+        // íë¸Œ ë²ˆí˜¸ ì—°ê²° ê·¸ë˜í”„ ë§Œë“¤ ë°°ì—´ ìƒì„± : ì „ì²´ 0 ì´ˆê¸°í™” ë˜ì–´ìˆë‹¤ (0: ë¹„ì—°ê²° / 1: ì—°ê²°)
         cubeConnectionGraph = new int[walkableCubeNum, walkableCubeNum];
 
-        // CubeState ½ºÅ©¸³Æ® °¡Á®¿À±â
+        // CubeState ìŠ¤í¬ë¦½íŠ¸ ê°€ì ¸ì˜¤ê¸°
         cubeState = new CubeState[walkableCubeNum];
         for (int i = 0; i < walkableCubeNum; i++)
         {
             cubeState[i] = connectWalkable[i].GetComponent<CubeState>();
         }
 
-        // Å¥ »ı¼º
+        // í ìƒì„±
         myQ = new Queue<CubeState>();
 
-        // ½ÃÀÛ ¶óº§
+        // ì‹œì‘ ë¼ë²¨
         label = 1;
     }
 
@@ -61,25 +61,25 @@ public class WalkablePath : MonoBehaviour
 
         for (int i = 0; i < walkableCubeNum; i++)
         {
-            // ÀÌ¹Ì È®ÀÎµÈ Å¥ºê 
+            // ì´ë¯¸ í™•ì¸ëœ íë¸Œ 
             if (cubeState[i].labelNum != -1)
                 continue;
 
-            // Å¥¿¡ Å¥ºê(CubeState) ³Ö±â
+            // íì— íë¸Œ(CubeState) ë„£ê¸°
             myQ.Enqueue(cubeState[i]);
 
             while (myQ.Count != 0)
             {
-                // ÇöÀç Å¥ºê Å¥¿¡¼­ Å¥ºê »©°í ¹İÈ¯
+                // í˜„ì¬ íë¸Œ íì—ì„œ íë¸Œ ë¹¼ê³  ë°˜í™˜
                 curCube = myQ.Dequeue();
-                // ÇöÀç Å¥ºê ¶óº§ ¼³Á¤ÇÏ±â
+                // í˜„ì¬ íë¸Œ ë¼ë²¨ ì„¤ì •í•˜ê¸°
                 curCube.labelNum = label;
-                // ÇöÀç Å¥ºê ¹øÈ£ ¹Ş¾Æ¿À±â
+                // í˜„ì¬ íë¸Œ ë²ˆí˜¸ ë°›ì•„ì˜¤ê¸°
                 curCubeNum = curCube.cubeNum;
 
-                // ÇöÀç Å¥ºê¶û ¿¬°áµÇ¾î ÀÖ´Â Å¥ºê ¹øÈ£µé ±×·¡ÇÁ¿¡¼­ È®ÀÎÇÏ±â
-                // ¹øÈ£¿¡ ÇØ´çÇÏ´Â Å¥ºê(CubeState)°¡ ¾ÆÁ÷ ¶óº§¸µ µÇÁö ¾Ê¾Ò´Ù¸é
-                // ÇÏ³ª¾¿ °¡Á®¿À¿Í¼­ ¶óº§ ¼³Á¤ÇØ ÁÖ°í Å¥ºê Å¥¿¡ ³Ö±â
+                // í˜„ì¬ íë¸Œë‘ ì—°ê²°ë˜ì–´ ìˆëŠ” íë¸Œ ë²ˆí˜¸ë“¤ ê·¸ë˜í”„ì—ì„œ í™•ì¸í•˜ê¸°
+                // ë²ˆí˜¸ì— í•´ë‹¹í•˜ëŠ” íë¸Œ(CubeState)ê°€ ì•„ì§ ë¼ë²¨ë§ ë˜ì§€ ì•Šì•˜ë‹¤ë©´
+                // í•˜ë‚˜ì”© ê°€ì ¸ì˜¤ì™€ì„œ ë¼ë²¨ ì„¤ì •í•´ ì£¼ê³  íë¸Œ íì— ë„£ê¸°
                 for (int j = 0; j < walkableCubeNum; j++)
                 {
                     if (cubeConnectionGraph[curCubeNum, j] == 1)
@@ -104,7 +104,7 @@ public class WalkablePath : MonoBehaviour
                 }
             }
 
-            // ´ÙÀ½ ¶óº§ ±×·şÀ¸·Î ³Ñ¾î°¡±â
+            // ë‹¤ìŒ ë¼ë²¨ ê·¸ë¥©ìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
             label++;
         }
     }

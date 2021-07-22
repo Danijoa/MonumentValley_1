@@ -2,33 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/* <ÇÃ·¹ÀÌ¾î ÀÌµ¿> 1¹ø »ı°¢  */
-// ÇÃ·¹ÀÌ¾î´Â [walkable]Å¥ºê À§Ä¡¿¡¼­ local ÁÂÇ¥ ±âÁØ (y?) +0.5 ¸¸Å­¿¡ À§Ä¡ÇØ ÀÖ±â
-// ÇÃ·¹ÀÌ¾î°¡ À§Ä¡ÇØ ÀÖ´Â Å¥ºê ¹­À½ [walkable]Å¥ºê »ö»ó º¯°æ
-// walkable Å¥ºê ¹­À½Àº °¡ÁßÄ¡ ¾ø´Â ¹æÇâ ±×·¡ÇÁ?·Î Á¸Àç
-// °¥Ã£±â´Â A*
+/* <í”Œë ˆì´ì–´ ì´ë™> 1ë²ˆ ìƒê°  */
+// í”Œë ˆì´ì–´ëŠ” [walkable]íë¸Œ ìœ„ì¹˜ì—ì„œ local ì¢Œí‘œ ê¸°ì¤€ (y?) +0.5 ë§Œí¼ì— ìœ„ì¹˜í•´ ìˆê¸°
+// í”Œë ˆì´ì–´ê°€ ìœ„ì¹˜í•´ ìˆëŠ” íë¸Œ ë¬¶ìŒ [walkable]íë¸Œ ìƒ‰ìƒ ë³€ê²½
+// walkable íë¸Œ ë¬¶ìŒì€ ê°€ì¤‘ì¹˜ ì—†ëŠ” ë°©í–¥ ê·¸ë˜í”„?ë¡œ ì¡´ì¬
+// ê°ˆì°¾ê¸°ëŠ” A*
 
-/* <ÇÃ·¹ÀÌ¾î ÀÌµ¿> 2¹ø »ı°¢  */
-// ÇÃ·¹ÀÌ¾î ½ÃÀÛÀº (tag. StartCube)Å¥ºê¿¡¼­
-// ÇÃ·¹ÀÌ¾î´Â Å¥ºê À§Ä¡¿¡¼­ local ÁÂÇ¥ ±âÁØ (y?) +1.3 ¸¸Å­¿¡ À§Ä¡ÇØ ÀÖ±â
-// ÇöÀç ÇÃ·¹ÀÌ¾î°¡ ÀÖ´Â Å¥ºêÀÇ ¶óº§ ¾Ë±â
-// ÇØ´ç ¶óº§ÀÇ Å¥ºêµé ¹Ş¾Æ¿À±â or ¹øÈ£? ±×·¡ÇÁ·Î..
-// ÁÂÇ¥(x, y, z) ¹Ş¾Æ¿À±â : ³ôÀÌ y´Â ÇÊ¿äÇÏÁö ¾ÊÁö ¾ÊÀ»±î..
-// 2Â÷¿ø ¹è¿­¿¡ ³Ö±â
-// ÇöÀç ÇÃ·¹ÀÌ¾î À§Ä¡¿¡¼­ ¸¶¿ì½º Å¬¸¯ÇÑ À§Ä¡±îÁö A*
-// A*·Î Ã£Àº Å¥ºê±æÀº [walkable]Å¥ºê »ö»ó º¯°æ
-// ÇÃ·¹ÀÌ¾î´Â ÇØ´ç Å¥ºê±æÀ» [walkable]Å¥ºê ÁÂÇ¥¿¡ µû¶ó CoroutineÀ¸·Î ½Ã°£ ÁÖ¸é¼­ ÀÌµ¿
-// + ¸¶¿ì½º Å¬¸¯ ÇÑ À§Ä¡°¡ ¹Ş¾Æ¿Â ÁÂÇ¥»ó¿¡ ¾øÀ¸¸é ÀÌµ¿ ¾ÈÇÏ±â
+/* <í”Œë ˆì´ì–´ ì´ë™> 2ë²ˆ ìƒê°  */
+// í”Œë ˆì´ì–´ ì‹œì‘ì€ (tag. StartCube)íë¸Œì—ì„œ
+// í”Œë ˆì´ì–´ëŠ” íë¸Œ ìœ„ì¹˜ì—ì„œ local ì¢Œí‘œ ê¸°ì¤€ (y?) +1.3 ë§Œí¼ì— ìœ„ì¹˜í•´ ìˆê¸°
+// í˜„ì¬ í”Œë ˆì´ì–´ê°€ ìˆëŠ” íë¸Œì˜ ë¼ë²¨ ì•Œê¸°
+// í•´ë‹¹ ë¼ë²¨ì˜ íë¸Œë“¤ ë°›ì•„ì˜¤ê¸° or ë²ˆí˜¸? ê·¸ë˜í”„ë¡œ..
+// ì¢Œí‘œ(x, y, z) ë°›ì•„ì˜¤ê¸° : ë†’ì´ yëŠ” í•„ìš”í•˜ì§€ ì•Šì§€ ì•Šì„ê¹Œ..
+// 2ì°¨ì› ë°°ì—´ì— ë„£ê¸°
+// í˜„ì¬ í”Œë ˆì´ì–´ ìœ„ì¹˜ì—ì„œ ë§ˆìš°ìŠ¤ í´ë¦­í•œ ìœ„ì¹˜ê¹Œì§€ A*
+// A*ë¡œ ì°¾ì€ íë¸Œê¸¸ì€ [walkable]íë¸Œ ìƒ‰ìƒ ë³€ê²½
+// í”Œë ˆì´ì–´ëŠ” í•´ë‹¹ íë¸Œê¸¸ì„ [walkable]íë¸Œ ì¢Œí‘œì— ë”°ë¼ Coroutineìœ¼ë¡œ ì‹œê°„ ì£¼ë©´ì„œ ì´ë™
+// + ë§ˆìš°ìŠ¤ í´ë¦­ í•œ ìœ„ì¹˜ê°€ ë°›ì•„ì˜¨ ì¢Œí‘œìƒì— ì—†ìœ¼ë©´ ì´ë™ ì•ˆí•˜ê¸°
 
-/* <ÇÃ·¹ÀÌ¾î ÀÌµ¿> 3¹ø »ı°¢  */
-// ÇÃ·¹ÀÌ¾î ½ÃÀÛÀº (tag. StartCube)Å¥ºê¿¡¼­
-// ÇÃ·¹ÀÌ¾î´Â [walkable]Å¥ºê À§Ä¡¿¡¼­ local ÁÂÇ¥ ±âÁØ (y?) +0.8 ¸¸Å­¿¡ À§Ä¡ÇØ ÀÖ±â
-// ÇöÀç ÇÃ·¹ÀÌ¾î°¡ ÀÖ´Â Å¥ºêÀÇ ¹øÈ£ & ¶óº§ Ã£±â
-// Å¬¸¯ÇÑ Å¥ºê ¹øÈ£ & ¶óº§ Ã£±â
-// µÎ ¶óº§ÀÌ µ¿ÀÏÇÏÁö ¾ÊÀ¸¸é ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¾ÈÇÏ±â
-// ÇöÀç Å¥ºê ¹øÈ£¿¡¼­ Å¬¸¯ÇÑ Å¥ºê ¹øÈ£·Î °¡´Â ±æ cubeConnectionGraph »ç¿ëÇØ¼­ Dijkstra / BFS·Î ±æÃ£±â
-// Ã£Àº Å¥ºê ¹øÈ£¿¡ ÇØ´çÇÏ´Â GameObject Ã£¾Æ¼­ ÀúÀåÇÏ±â
-// Â÷·Ê´ë·Î GameObjectÀÇ transform À¸·Î È¸ÀüÇÏ°í ÀÌµ¿ÇÏ°í
+/* <í”Œë ˆì´ì–´ ì´ë™> 3ë²ˆ ìƒê°  */
+// í”Œë ˆì´ì–´ ì‹œì‘ì€ (tag. StartCube)íë¸Œì—ì„œ
+// í”Œë ˆì´ì–´ëŠ” [walkable]íë¸Œ ìœ„ì¹˜ì—ì„œ local ì¢Œí‘œ ê¸°ì¤€ (y?) +0.8 ë§Œí¼ì— ìœ„ì¹˜í•´ ìˆê¸°
+// í˜„ì¬ í”Œë ˆì´ì–´ê°€ ìˆëŠ” íë¸Œì˜ ë²ˆí˜¸ & ë¼ë²¨ ì°¾ê¸°
+// í´ë¦­í•œ íë¸Œ ë²ˆí˜¸ & ë¼ë²¨ ì°¾ê¸°
+// ë‘ ë¼ë²¨ì´ ë™ì¼í•˜ì§€ ì•Šìœ¼ë©´ í”Œë ˆì´ì–´ ì´ë™ ì•ˆí•˜ê¸°
+// í˜„ì¬ íë¸Œ ë²ˆí˜¸ì—ì„œ í´ë¦­í•œ íë¸Œ ë²ˆí˜¸ë¡œ ê°€ëŠ” ê¸¸ cubeConnectionGraph ì‚¬ìš©í•´ì„œ Dijkstra / BFSë¡œ ê¸¸ì°¾ê¸°
+// ì°¾ì€ íë¸Œ ë²ˆí˜¸ì— í•´ë‹¹í•˜ëŠ” GameObject ì°¾ì•„ì„œ ì €ì¥í•˜ê¸°
+// ì°¨ë¡€ëŒ€ë¡œ GameObjectì˜ transform ìœ¼ë¡œ íšŒì „í•˜ê³  ì´ë™í•˜ê³ 
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -39,17 +39,17 @@ public class PlayerMovement : MonoBehaviour
 
     private bool checkOnce;
 
-    // ½ÃÀÛ ÁöÁ¡
+    // ì‹œì‘ ì§€ì 
     private GameObject startCube;
     private Vector3 startCubePos;
 
-    // ÇÃ·¹ÀÌ¾î
+    // í”Œë ˆì´ì–´
     private Vector3 playerCubePos;
     public int playerCubeNum;
     private int curPlayerCubeNum;
     private int curPlayerCubeLabel;
 
-    // Å¬¸¯ÇÑ Å¥ºê
+    // í´ë¦­í•œ íë¸Œ
     private int curWalkableCubeNum;
     private int curWalkableCubeLabel;
 
@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
     private int[] pathCubeNum;
     private List<int> pathStore = new List<int>();
 
-    // ÀÌµ¿
+    // ì´ë™
     private List<GameObject> pathCube = new List<GameObject>();
     private Vector3 targetPos;
     private Quaternion targetDir;
@@ -67,12 +67,13 @@ public class PlayerMovement : MonoBehaviour
     private bool needMove;
     private bool needRotation;
     private Vector3 nextCubePos;
+    private bool isIllusion;
 
     void Start()
     {
-        // ÇÃ·¹ÀÌ¾î ½ÃÀÛÀº (tag. StartCube)Å¥ºêÀÇ Ã¹Â° Child¿¡¼­
+        // í”Œë ˆì´ì–´ ì‹œì‘ì€ (tag. StartCube)íë¸Œì˜ ì²«ì§¸ Childì—ì„œ
         startCube = GameObject.FindGameObjectWithTag("StartCube").transform.GetChild(0).gameObject;
-        // ÇÃ·¹ÀÌ¾î´Â [walkable]Å¥ºê À§Ä¡¿¡¼­ local ÁÂÇ¥ ±âÁØ (y?) +0.8 ¸¸Å­¿¡ À§Ä¡ÇØ ÀÖ±â
+        // í”Œë ˆì´ì–´ëŠ” [walkable]íë¸Œ ìœ„ì¹˜ì—ì„œ local ì¢Œí‘œ ê¸°ì¤€ (y?) +0.8 ë§Œí¼ì— ìœ„ì¹˜í•´ ìˆê¸°
         startCubePos = startCube.transform.position;
         PlayerCubePos(startCubePos);
         //transform.position = new Vector3(startCubePos.x, startCubePos.y + 0.8f, startCubePos.z);
@@ -82,15 +83,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Ã³À½ ÇÑ¹ø¸¸ ½ÇÇà
+        // ì²˜ìŒ í•œë²ˆë§Œ ì‹¤í–‰
         if (checkOnce)
         {
-            // [walkable]Å¥ºêµé ¹Ş¾Æ¿À±â
+            // [walkable]íë¸Œë“¤ ë°›ì•„ì˜¤ê¸°
             walkablePath = GameObject.FindObjectOfType<WalkablePath>();
             connectWalkable = walkablePath.connectWalkable;
             cubeConnectionGraph = walkablePath.cubeConnectionGraph;
 
-            // ÃÊ±âÈ­
+            //walkablePath.MakePath();
+
+            // ì´ˆê¸°í™”
             visitedCube = new bool[connectWalkable.Length];
             pathCubeNum = new int[connectWalkable.Length];
 
@@ -99,19 +102,19 @@ public class PlayerMovement : MonoBehaviour
             checkOnce = false;
         }
 
-        // Å¥ºê ¼±ÅÃ: ¸¶¿ì½º ¿À¸¥ Å¬¸¯
+        // íë¸Œ ì„ íƒ: ë§ˆìš°ìŠ¤ ì˜¤ë¥¸ í´ë¦­
         if (Input.GetMouseButtonDown(1))
         {
-            // Å¬¸¯ÇÑ ¿ÀºêÁ§Æ®
+            // í´ë¦­í•œ ì˜¤ë¸Œì íŠ¸
             FindClickedOdject();
 
-            // ÇÃ·¹ÀÌ¾î
+            // í”Œë ˆì´ì–´
             FindPlayer();
 
-            // ÇÃ·¹ÀÌ¾î¿Í Å¬¸¯ÇÑ Å¥ºê°¡ µ¿ÀÏÇÑ ¶óº§ÀÌ¸é
+            // í”Œë ˆì´ì–´ì™€ í´ë¦­í•œ íë¸Œê°€ ë™ì¼í•œ ë¼ë²¨ì´ë©´
             if (curWalkableCubeLabel == curPlayerCubeLabel)
             {
-                // ÃÊ±âÈ­
+                // ì´ˆê¸°í™”
                 pathFind.Clear();
                 for (int i = 0; i < connectWalkable.Length; i++)
                 {
@@ -119,51 +122,85 @@ public class PlayerMovement : MonoBehaviour
                     pathCubeNum[i] = -1;
                 }
 
-                // ÇöÀç Å¥ºê ¹øÈ£¿¡¼­ Å¬¸¯ÇÑ Å¥ºê ¹øÈ£·Î °¡´Â ±æ
-                // Å¥ºê ¹øÈ£ BFS·Î ±æÃ£±â
+                // í˜„ì¬ íë¸Œ ë²ˆí˜¸ì—ì„œ í´ë¦­í•œ íë¸Œ ë²ˆí˜¸ë¡œ ê°€ëŠ” ê¸¸
+                // íë¸Œ ë²ˆí˜¸ BFSë¡œ ê¸¸ì°¾ê¸°
                 PathBFS();
 
-                // ±æ ÀúÀå
+                // ê¸¸ ì €ì¥
                 StorePath();
 
-                // Å¬¸¯ÇÑ À§Ä¡ °æ·Î ±¸ÇßÀ¸¸é ÀÌµ¿ ÁØºñ ³¡
+                // í´ë¦­í•œ ìœ„ì¹˜ ê²½ë¡œ êµ¬í–ˆìœ¼ë©´ ì´ë™ ì¤€ë¹„ ë
                 index = 0;
-                needMove = true;
-                needRotation = false;
+                if (pathCube.Count >= 2)
+                {
+                    needMove = false;
+                    needRotation = true;
+                }
+                //Debug.Log("ê¸¸ : " + pathCube.Count);
             }
         }
 
-        // ÀÌµ¿ÇÏÀÚ
-        if (needMove && !needRotation)
-        {
-            nextCubePos = pathCube[index].transform.position;
-            targetPos = new Vector3(nextCubePos.x, nextCubePos.y + 0.8f, nextCubePos.z);
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 8f);
-
-            if (transform.position == targetPos)
-            {
-                PlayerCubeNum();
-                index++;
-                needRotation = true;
-            }
-
-            if (index >= pathCube.Count)
-            {
-                needMove = false;
-                needRotation = false;
-            }
-        }
-
-        // È¸ÀüÇÏÀÚ
+        // íšŒì „í•˜ì
         if (needRotation)
         {
-            Vector3 dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z)
-                - new Vector3(transform.position.x, 0, transform.position.z);
+            // ì´ë™í•  ëª©í‘œ ì§€ì  íë¸Œê°€ ì°©ì‹œ í¬ì¸íŠ¸(Illusion1Up)ì¸ê°€ í™•ì¸
+            if (pathCube[index].transform.parent.tag == "Illusion1Up" && pathCube[index + 1].transform.parent.tag == "Illusion1Down"
+                || pathCube[index].transform.parent.tag == "Illusion1Down" && pathCube[index + 1].transform.parent.tag == "Illusion1Up")
+                isIllusion = true;
+
+            // ë°”ë¼ë³´ëŠ” ë°©í–¥
+            Vector3 dir;
+            if (isIllusion)
+                dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z);
+            else
+                dir = new Vector3(pathCube[index + 1].transform.position.x, 0, pathCube[index + 1].transform.position.z)
+                - new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z);
             targetDir = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetDir, Time.deltaTime * 200f);
+
+            // íšŒì „ ì ìš©
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetDir, Time.deltaTime * 400f);
+
+            // íšŒì „ ì™„ë£Œ
             if (transform.rotation == targetDir)
             {
                 needRotation = false;
+                needMove = true;
+            }
+        }
+
+        // ì´ë™í•˜ì
+        if (needMove && !needRotation)
+        {
+            // ì´ë™ ìœ„ì¹˜ ì¡ê¸°
+            nextCubePos = pathCube[index + 1].transform.position;
+            targetPos = new Vector3(nextCubePos.x, nextCubePos.y + 0.8f, nextCubePos.z);
+
+            // ì´ë™ ì ìš©
+            if (isIllusion)
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 50f);
+            else
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 8f);
+
+            // ì´ë™ ì™„ë£Œ 
+            if (transform.position == targetPos)
+            {
+                isIllusion = false;
+
+                // ì´ë™í•œ ìœ„ì¹˜ì˜ í”Œë ˆì´ì–´ íë¸Œ ë²ˆí˜¸ ì°¾ê¸°
+                PlayerCubeNum();
+
+                // ë‹¤ìŒ ì´ë™ íë¸Œ 
+                if (index + 1 >= pathCube.Count - 1)
+                {
+                    needMove = false;
+                    needRotation = false;
+                }
+                else
+                {
+                    index++;
+                    needMove = false;
+                    needRotation = true;
+                }
             }
         }
     }
@@ -177,17 +214,17 @@ public class PlayerMovement : MonoBehaviour
 
             if (Physics.Raycast(ray.origin, ray.direction, out rayHit))
             {
-                // Å¬¸¯ÇÑ ¿ÀºêÁ§Æ®°¡ [walkable]Å¥ºê ÀÌ¸é
+                // í´ë¦­í•œ ì˜¤ë¸Œì íŠ¸ê°€ [walkable]íë¸Œ ì´ë©´
                 if (rayHit.transform.gameObject.tag == "ConnectWalkable")
                 {
-                    // [walkable]Å¥ºê¸é ÇØ´ç Å¥ºê ¹øÈ£, ¶óº§ Ã£±â
+                    // [walkable]íë¸Œë©´ í•´ë‹¹ íë¸Œ ë²ˆí˜¸, ë¼ë²¨ ì°¾ê¸°
                     curWalkableCubeNum = rayHit.transform.gameObject.GetComponent<CubeState>().cubeNum;
                     curWalkableCubeLabel = rayHit.transform.gameObject.GetComponent<CubeState>().labelNum;
-                    //Debug.Log("Å¥ºê ¹øÈ£" + curWalkableCubeNum);
-                    //Debug.Log("Å¥ºê ¶óº§" + curWalkableCubeLabel);
+                    //Debug.Log("íë¸Œ ë²ˆí˜¸" + curWalkableCubeNum);
+                    //Debug.Log("íë¸Œ ë¼ë²¨" + curWalkableCubeLabel);
 
                     rayHit.transform.gameObject.GetComponent<Renderer>().material.color
-                        = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //ÁÖÈ²
+                        = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //ì£¼í™©
 
                     break;
                 }
@@ -199,20 +236,20 @@ public class PlayerMovement : MonoBehaviour
     {
         for (int i = 0; i < connectWalkable.Length; i++)
         {
-            // ÇöÀç ÇÃ·¹ÀÌ¾î À§Ä¡¿Í [walkable]Å¥ºê À§Ä¡°¡ µ¿ÀÏÇÏ¸é
+            // í˜„ì¬ í”Œë ˆì´ì–´ ìœ„ì¹˜ì™€ [walkable]íë¸Œ ìœ„ì¹˜ê°€ ë™ì¼í•˜ë©´
             playerCubePos = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
             Vector3 temp = playerCubePos - connectWalkable[i].transform.position;
 
             if (temp.magnitude < 0.1f)
             {
-                // ÇØ´ç [walkable]Å¥ºêÀÇ ¹øÈ£, ¶óº§ ¾Ë±â
+                // í•´ë‹¹ [walkable]íë¸Œì˜ ë²ˆí˜¸, ë¼ë²¨ ì•Œê¸°
                 curPlayerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
                 curPlayerCubeLabel = connectWalkable[i].GetComponent<CubeState>().labelNum;
-                //Debug.Log("ÇÃ·¹ÀÌ¾î ¹øÈ£ : " + curPlayerCubeNum);
-                //Debug.Log("ÇÃ·¹ÀÌ¾î ¶óº§ : " + curPlayerCubeLabel);
+                //Debug.Log("í”Œë ˆì´ì–´ ë²ˆí˜¸ : " + curPlayerCubeNum);
+                //Debug.Log("í”Œë ˆì´ì–´ ë¼ë²¨ : " + curPlayerCubeLabel);
 
                 connectWalkable[i].transform.GetComponent<Renderer>().material.color
-                    = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //ÁÖÈ²
+                    = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //ì£¼í™©
 
                 break;
             }
@@ -231,19 +268,19 @@ public class PlayerMovement : MonoBehaviour
 
             for (int j = 0; j < connectWalkable.Length; j++)
             {
-                // ÀÎÁ¢ÇÏ¸é¼­ ¹æ¹®ÀüÀÎ Å¥ºê
+                // ì¸ì ‘í•˜ë©´ì„œ ë°©ë¬¸ì „ì¸ íë¸Œ
                 if (cubeConnectionGraph[curNum, j] == 1 && visitedCube[j] == false)
                 {
-                    // Å¥¿¡ ³Ö±â
+                    // íì— ë„£ê¸°
                     pathFind.Enqueue(j);
-                    // ¹æ¹® °»½Å
+                    // ë°©ë¬¸ ê°±ì‹ 
                     visitedCube[j] = true;
-                    // ºÎ¸ğ °»½Å
+                    // ë¶€ëª¨ ê°±ì‹ 
                     pathCubeNum[j] = curNum;
                 }
             }
 
-            // Å¸°Ù Å¥ºê¸¦ ¹æ¹® ÇßÀ¸¸é break
+            // íƒ€ê²Ÿ íë¸Œë¥¼ ë°©ë¬¸ í–ˆìœ¼ë©´ break
             if (visitedCube[curWalkableCubeNum] == true)
                 break;
         }
@@ -260,11 +297,11 @@ public class PlayerMovement : MonoBehaviour
             temp = pathCubeNum[temp];
         }
 
-        // µÚ¿¡¼­ ºÎÅÍ ¾ÕÀ¸·Î ÀĞ±â
+        // ë’¤ì—ì„œ ë¶€í„° ì•ìœ¼ë¡œ ì½ê¸°
         pathCube.Clear();
         for (int i = pathStore.Count - 1; i >= 0; i--)
         {
-            // Ã£Àº Å¥ºê ¹øÈ£¿¡ ÇØ´çÇÏ´Â GameObject Ã£¾Æ¼­ ÀúÀåÇÏ±â
+            // ì°¾ì€ íë¸Œ ë²ˆí˜¸ì— í•´ë‹¹í•˜ëŠ” GameObject ì°¾ì•„ì„œ ì €ì¥í•˜ê¸°
             for (int j = 0; j < connectWalkable.Length; j++)
             {
                 if (pathStore[i] == connectWalkable[j].GetComponent<CubeState>().cubeNum)
@@ -284,7 +321,7 @@ public class PlayerMovement : MonoBehaviour
             if (tempPos == connectWalkable[i].transform.position)
             {
                 playerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
-                //Debug.Log("¹øÈ£: " + playerCubeNum);
+                //Debug.Log("ë²ˆí˜¸: " + playerCubeNum);
                 break;
             }
         }

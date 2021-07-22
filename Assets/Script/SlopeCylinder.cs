@@ -76,6 +76,9 @@ public class SlopeCylinder : MonoBehaviour
 
         myMesh.vertices = myVertices;
         myMesh.triangles = myTriangle;
+
+        myMeshFilter.mesh.RecalculateNormals();
+        myMeshFilter.mesh.RecalculateTangents();
     }
 
 }

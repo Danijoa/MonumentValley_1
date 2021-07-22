@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/* <¿¬°á ±×·¡ÇÁ> */
-// trriger enter µÈ ¼ø°£ (1) »ö»ó ¹Ù²ãÁÖ±â (2) [ºÎ¸ğ]Å¥ºê ¹øÈ£ ±×·¡ÇÁ¿¡ ¿¬°áÇØÁÖ±â
-// trriger exit µÈ ¼ø°£ (1) ¿ø·¡ »ö»óÀ¸·Î µ¹·ÁÁÖ±â (2) [ºÎ¸ğ]Å¥ºê ¹øÈ£ ±×·¡ÇÁ¿¡¼­ ¿¬°á ÇØÁ¦
+/* <ì—°ê²° ê·¸ë˜í”„> */
+// trriger enter ëœ ìˆœê°„ (1) ìƒ‰ìƒ ë°”ê¿”ì£¼ê¸° (2) [ë¶€ëª¨]íë¸Œ ë²ˆí˜¸ ê·¸ë˜í”„ì— ì—°ê²°í•´ì£¼ê¸°
+// trriger exit ëœ ìˆœê°„ (1) ì›ë˜ ìƒ‰ìƒìœ¼ë¡œ ëŒë ¤ì£¼ê¸° (2) [ë¶€ëª¨]íë¸Œ ë²ˆí˜¸ ê·¸ë˜í”„ì—ì„œ ì—°ê²° í•´ì œ
 
 public class MakeConnection : MonoBehaviour
 {
@@ -20,11 +20,11 @@ public class MakeConnection : MonoBehaviour
     {
         if (other.gameObject.tag == "ConnectionIndicator")
         {
-            // (1) »ö»ó ¹Ù²ãÁÖ±â
+            // (1) ìƒ‰ìƒ ë°”ê¿”ì£¼ê¸°
             //isBlue = true;
             connectionCube.material.color = new Color(28 / 255f, 100 / 255f, 255 / 255f);
 
-            // (2) °°Àº ¹øÈ£°¡ ¾Æ´Ï¶ó¸é / Å¥ºê ¹øÈ£ ±×·¡ÇÁ¿¡ ¿¬°áÇØÁÖ±â
+            // (2) ê°™ì€ ë²ˆí˜¸ê°€ ì•„ë‹ˆë¼ë©´ / íë¸Œ ë²ˆí˜¸ ê·¸ë˜í”„ì— ì—°ê²°í•´ì£¼ê¸°
             otherCubeNum = other.GetComponentInParent<CubeState>().cubeNum;
             if (other.GetComponentInParent<RoadState>().roadNum 
                 != this.GetComponentInParent<RoadState>().roadNum)
@@ -39,15 +39,14 @@ public class MakeConnection : MonoBehaviour
     {
         if (other.gameObject.tag == "ConnectionIndicator")
         {
-            // (1) ¿ø·¡ »ö»óÀ¸·Î µ¹·ÁÁÖ±â
+            // (1) ì›ë˜ ìƒ‰ìƒìœ¼ë¡œ ëŒë ¤ì£¼ê¸°
             //isBlue = false;
             connectionCube.material.color = startColor;
 
-            // (2) Å¥ºê ¹øÈ£ ±×·¡ÇÁ¿¡¼­ ¿¬°á ÇØÁ¦
+            // (2) íë¸Œ ë²ˆí˜¸ ê·¸ë˜í”„ì—ì„œ ì—°ê²° í•´ì œ
             walkablePath.cubeConnectionGraph[curCubeNum, otherCubeNum] = 0;
             walkablePath.cubeConnectionGraph[otherCubeNum, curCubeNum] = 0;
         }
-
     }
 
     void Start()
