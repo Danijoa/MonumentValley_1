@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlopeCube : MonoBehaviour
 {
     Vector3[] myVertices = new Vector3[6];
-    int[] myTriangle;
+    int[] myTriangle; 
 
     Mesh myMesh;
     MeshFilter myMeshFilter;
