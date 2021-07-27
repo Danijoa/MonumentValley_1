@@ -29,19 +29,19 @@ public class CubeState : MonoBehaviour
     private void Update()
     {
         //// 색상 구분
-        //if (labelNum == 1)
-        //    colorChange.material.color = new Color(0 / 255f, 255 / 255f, 255 / 255f);   //하늘
-        //else if (labelNum == 2)
-        //    colorChange.material.color = new Color(255 / 255f, 0 / 255f, 255 / 255f);   //보라
-        //else if (labelNum == 3)
-        //    colorChange.material.color = new Color(255 / 255f, 0 / 255f, 0 / 255f);     //빨간
-        //else if (labelNum == 4)
-        //    colorChange.material.color = new Color(0 / 255f, 0 / 255f, 255 / 255f);     //파랑
-        //else if (labelNum == 5)
-        //    colorChange.material.color = new Color(0 / 255f, 255 / 255f, 0 / 255f);     //초록
-        //else if (labelNum == 6)
-        //    colorChange.material.color = new Color(0 / 255f, 0 / 255f, 0 / 255f);       //검정
-        //else
-        //    colorChange.material.color = new Color(255 / 255f, 255 / 255f, 0 / 255f);   //노랑
+        if (labelNum == 1)
+            colorChange.material.color = new Color(0 / 255f, 255 / 255f, 255 / 255f);   //하늘
+        else if (labelNum == 2)
+            colorChange.material.color = new Color(255 / 255f, 0 / 255f, 255 / 255f);   //보라
+        else if (labelNum == 3)
+            colorChange.material.color = new Color(255 / 255f, 0 / 255f, 0 / 255f);     //빨간
+        else if (labelNum == 4)
+            colorChange.material.color = new Color(0 / 255f, 0 / 255f, 255 / 255f);     //파랑
+        else if (labelNum == 5)
+            colorChange.material.color = new Color(0 / 255f, 255 / 255f, 0 / 255f);     //초록
+        else if (labelNum == 6)
+            colorChange.material.color = new Color(0 / 255f, 0 / 255f, 0 / 255f);       //검정
+        else
+            colorChange.material.color = new Color(255 / 255f, 255 / 255f, 0 / 255f);   //노랑
     }
 }

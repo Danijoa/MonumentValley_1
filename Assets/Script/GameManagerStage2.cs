@@ -23,6 +23,9 @@ public class GameManagerStage2 : MonoBehaviour
 
     void Start()
     {
+        DataController.Instance.gameData.isClear1 = true;
+        DataController.Instance.SaveGameData();
+
         isStairRotating = false;
         isFloorRotating = false;
 

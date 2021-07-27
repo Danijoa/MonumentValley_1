@@ -51,8 +51,8 @@ public class CameraMove : MonoBehaviour
                 setPosition = false;
                 dir = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 11.5f, cameraObject.transform.position.z);
             }
-            cameraObject.transform.position = Vector3.MoveTowards(cameraObject.transform.position, dir, Time.deltaTime* 3f);
-            
+            cameraObject.transform.position = Vector3.MoveTowards(cameraObject.transform.position, dir, Time.deltaTime * 4f);
+
             // Coroutine으로 어케 안되나..
             Vector3 temp = cameraObject.transform.position - dir;
             if (temp.magnitude < 3f && loadButton)

@@ -108,10 +108,20 @@ public class RotateFloor : MonoBehaviour
                 {
                     // transform.Rotate(회전 기준 축, 회전 속도, world 좌표 기준)
                     transform.Rotate(transform.up, -dotValue, Space.World);
+
+                    if (playerMovement.playerRoadIsFloor)
+                    {
+                        playerMovement.transform.Rotate(transform.up, -dotValue, Space.World);
+                    }
                 }
                 else // 3,4사분면 
                 {
                     transform.Rotate(transform.up, dotValue, Space.World);
+
+                    if (playerMovement.playerRoadIsFloor)
+                    {
+                        playerMovement.transform.Rotate(transform.up, dotValue, Space.World);
+                    }
                 }
 
                 prevPos = curPos;
@@ -163,6 +173,7 @@ public class RotateFloor : MonoBehaviour
         if (checkRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, to, Time.deltaTime * 120f);
+
             if (transform.rotation == to)
             {
                 checkPlayer = false;
@@ -171,7 +182,7 @@ public class RotateFloor : MonoBehaviour
         }
 
         // 플레이어도 같이 회전 시켜 주자
-        if (checkPlayer)
+        if (checkPlayer && playerMovement.playerRoadIsFloor)
             MakePlayerMove();
     }
 

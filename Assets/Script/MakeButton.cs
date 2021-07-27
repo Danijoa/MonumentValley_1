@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
+//using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,7 +22,7 @@ public class MakeButton : MonoBehaviour
     {
         buttonImage = GetComponent<RawImage>();
         buttonColor = buttonImage.color;
-        buttonTime = 1f;
+        buttonTime = 0.8f;
         time = 0f;
         isButton = false;
         isClicked = false;
@@ -84,9 +84,6 @@ public class MakeButton : MonoBehaviour
             isClicked = true;
             CubeState.cubeNumber = 0;
             sceneFade = fadeImage.GetComponent<SceneFade>();
-
-            DataController.Instance.gameData.isClear1 = true;
-            DataController.Instance.SaveGameData();
 
             sceneFade.FadeIn();
         }

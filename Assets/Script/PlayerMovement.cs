@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /* <플레이어 이동> 1번 생각  */
 // 플레이어는 [walkable]큐브 위치에서 local 좌표 기준 (y?) +0.5 만큼에 위치해 있기
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private WalkablePath walkablePath;
     private GameObject[] connectWalkable;
     private int[,] cubeConnectionGraph;
-
+     
     private bool checkOnce;
 
     // 시작 지점
@@ -46,12 +47,15 @@ public class PlayerMovement : MonoBehaviour
     // 플레이어
     private Vector3 playerCubePos;
     public int playerCubeNum;
+    private GameObject playerRoad;
+    public bool playerRoadIsFloor;
     private int curPlayerCubeNum;
     private int curPlayerCubeLabel;
 
     // 클릭한 큐브
     private int curWalkableCubeNum;
     private int curWalkableCubeLabel;
+    private GameObject clickedCube;
 
     // BFS
     private Queue<int> pathFind = new Queue<int>();
@@ -78,6 +82,12 @@ public class PlayerMovement : MonoBehaviour
         PlayerCubePos(startCubePos);
         //transform.position = new Vector3(startCubePos.x, startCubePos.y + 0.8f, startCubePos.z);
 
+        playerRoadIsFloor = false;
+        isIllusion = false;
+
+        clickedCube = GameObject.FindGameObjectWithTag("ClickPoint");
+        clickedCube.SetActive(false);
+
         checkOnce = true;
     }
 
@@ -97,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
             visitedCube = new bool[connectWalkable.Length];
             pathCubeNum = new int[connectWalkable.Length];
 
-            PlayerCubeNum();
+            PlayerCube();
 
             checkOnce = false;
         }
@@ -151,11 +161,15 @@ public class PlayerMovement : MonoBehaviour
             // 바라보는 방향
             Vector3 dir;
             if (isIllusion)
-                dir = new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z);
+            {
+                targetDir = transform.rotation;
+            }
             else
+            {
                 dir = new Vector3(pathCube[index + 1].transform.position.x, 0, pathCube[index + 1].transform.position.z)
-                - new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z);
-            targetDir = Quaternion.LookRotation(dir);
+                    - new Vector3(pathCube[index].transform.position.x, 0, pathCube[index].transform.position.z);
+                targetDir = Quaternion.LookRotation(dir);
+            }
 
             // 회전 적용
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetDir, Time.deltaTime * 400f);
@@ -187,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
                 isIllusion = false;
 
                 // 이동한 위치의 플레이어 큐브 번호 찾기
-                PlayerCubeNum();
+                PlayerCube();
 
                 // 다음 이동 큐브 
                 if (index + 1 >= pathCube.Count - 1)
@@ -204,7 +218,6 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
     private void FindClickedOdject()
     {
         for (int i = 0; i < connectWalkable.Length; i++)
@@ -223,6 +236,8 @@ public class PlayerMovement : MonoBehaviour
                     //Debug.Log("큐브 번호" + curWalkableCubeNum);
                     //Debug.Log("큐브 라벨" + curWalkableCubeLabel);
 
+                    StartCoroutine(DrawCircle(rayHit.transform.gameObject.transform.position));
+
                     rayHit.transform.gameObject.GetComponent<Renderer>().material.color
                         = new Color(255 / 255f, 165 / 255f, 40 / 255f);   //주황
 
@@ -230,6 +245,35 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator DrawCircle(Vector3 cubePos)
+    {
+        // 위치 설정
+        clickedCube.transform.position = new Vector3(cubePos.x, cubePos.y + 0.02f, cubePos.z);
+        // 활성화
+        clickedCube.SetActive(true);
+        yield return new WaitForSeconds(0.4f);
+        // 비활성화
+        StartCoroutine("DoFadeOut");
+    }
+    
+    IEnumerator DoFadeOut()
+    {
+        float time = 0f;
+        Material fadeMaterial = clickedCube.GetComponent<Renderer>().material;
+        Color fadeColor = fadeMaterial.color;
+        while (fadeColor.a > 0f)
+        {
+            time += Time.deltaTime / 1f;
+            fadeColor.a = Mathf.Lerp(1f, 0f, time);
+            fadeMaterial.color = fadeColor;
+            yield return null;
+        }
+
+        fadeColor.a = 1f;
+        fadeMaterial.color = fadeColor;
+        clickedCube.SetActive(false);
     }
 
     private void FindPlayer()
@@ -313,15 +357,31 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void PlayerCubeNum()
+    private void PlayerCube()
     {
         for (int i = 0; i < connectWalkable.Length; i++)
         {
-            Vector3 tempPos = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
-            if (tempPos == connectWalkable[i].transform.position)
+            Vector3 tempPos1 = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
+            if (tempPos1 == connectWalkable[i].transform.position)
             {
                 playerCubeNum = connectWalkable[i].GetComponent<CubeState>().cubeNum;
                 //Debug.Log("번호: " + playerCubeNum);
+                break;
+            }
+        }
+
+        for (int i = 0; i < connectWalkable.Length; i++)
+        {
+            Vector3 tempPos2 = new Vector3(transform.position.x, transform.position.y - 1.3f, transform.position.z);
+            if (tempPos2 == connectWalkable[i].transform.parent.transform.position)
+            {
+                playerRoad = connectWalkable[i].transform.parent.gameObject;
+
+                if (playerRoad.tag == "FloorCube" || playerRoad.tag == "Illusion1Down")
+                    playerRoadIsFloor = true;
+                else
+                    playerRoadIsFloor = false;
+
                 break;
             }
         }

@@ -51,8 +51,11 @@ public class DataController : MonoBehaviour
         }
     }
 
+    private Scene scene;
     private void Start()
     {
+        scene = SceneManager.GetActiveScene();
+
         LoadGameData();
         SaveGameData();
     }
@@ -97,14 +100,17 @@ public class DataController : MonoBehaviour
         SaveGameData();
     }
 
-    private bool once = true;
     private void Update()
     {
-        if (once && gameData.isClear1)
+        if (scene.name == "StartScene")
         {
-            CubeState.cubeNumber = 0;
+            gameData.isClear1 = false;
+            gameData.isClear2 = false;
+        }
+
+        if (gameData.isClear1 && scene.name != "Level2Scene")
+        {
             SceneManager.LoadScene("Level2Scene");
-            once = false;
         }
     }
 }

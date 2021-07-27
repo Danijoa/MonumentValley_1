@@ -9,16 +9,22 @@ public class SceneFade : MonoBehaviour
     private Image fadeImage;
     private Color fadeColor;
     private float fadeTime;
+    private float fadeInTime; 
     private float startAlpha, endAlpha, time;
     private bool isFading;
 
-	private void Start()
+    private Scene scene;
+
+    private void Start()
 	{
         fadeImage = GetComponent<Image>();
         fadeColor = fadeImage.color;
-        fadeTime = 2.5f;
+        fadeTime = 4f;
+        fadeInTime = 2f;
         time = 0f;
         isFading = false;
+
+        scene = SceneManager.GetActiveScene();
     }
 
 	public void FadeIn()
@@ -34,15 +40,25 @@ public class SceneFade : MonoBehaviour
     {
         isFading = true;
 
+        time = 0;
         while (fadeColor.a < 1f)
         {
-            time += Time.deltaTime / fadeTime;
+            time += Time.deltaTime / fadeInTime;
             fadeColor.a = Mathf.Lerp(startAlpha, endAlpha, time);
             fadeImage.color = fadeColor;
             yield return null;
         }
 
-        SceneManager.LoadScene("Level2Scene");
+        if (scene.name == "Level1Scene")
+        {
+            SceneManager.LoadScene("Level2Scene");
+        }
+
+        if (scene.name == "StartScene")
+        {
+            SceneManager.LoadScene("Level1Scene");
+        }
+
 
         isFading = false;
     }
@@ -60,6 +76,7 @@ public class SceneFade : MonoBehaviour
     {
         isFading = true;
 
+        time = 0;
         while (fadeColor.a > 0f)
         {
             time += Time.deltaTime / fadeTime;
